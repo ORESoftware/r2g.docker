@@ -76,7 +76,11 @@ export const run = function (cwd: string, projectRoot: string) {
       
       r2g: function (runLocalTests: any, cb: Function) {
         log.info('running r2g tests');
-        process.nextTick(cb);
+        const k = cp.spawn('bash');
+        k.stdin.end('r2g;');
+        k.stdout.pipe(process.stdout);
+        k.stderr.pipe(process.stderr);
+        k.once('exit', cb);
       }
       
     },

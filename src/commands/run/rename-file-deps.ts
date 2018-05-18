@@ -49,7 +49,7 @@ export const renameDeps = function (createProjectMap: any, pkgJSONPath: string, 
             if (String(v).startsWith('file:')) {
               
               if (createProjectMap[k]) {
-                d[k] = 'file://' + createProjectMap[k];
+                d[k] = 'file://' + path.dirname(createProjectMap[k]);
               }
               else {
                 log.error('The following dep has a file:// key, but does not exist in generated map => ' + k);

@@ -8,7 +8,6 @@ if [ ! -f package.json ]; then
 fi
 
 #name="$(axxel package.json 'name')";
-
 name="my_docker_r2g";
 
 container="docker_r2g_-_$name";
