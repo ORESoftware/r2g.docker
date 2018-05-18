@@ -4,29 +4,31 @@
 import cp = require('child_process');
 import path = require("path");
 import async = require('async');
-
+import log from './logger';
+import residence = require('residence');
 const contents = path.resolve(__dirname + '/../assets/contents');
 const cwd = process.cwd();
+const projectRoot = residence.findProjectRoot(cwd);
 
-const docker_r2g = '.docker.r2g';
+import {opts} from './parse-cli-options';
 
-async.autoInject({
-  
-  mkdir: function () {
-    const k = cp.spawn('bash');
-    k.stdin.end(`mkdir ./${docker_r2g}`);
-  },
-  
-  copyContents: function () {
-    const k = cp.spawn('bash');
-    k.stdin.end(`cp -R ${contents} ${cwd}/${docker_r2g}`);
-  }
+let p: Promise<{ run: (cwd: string, projectRoot: string) => void }>;
 
+if (opts.init) {
+  p = import('./commands/init');
+}
+else if (opts.run) {
+  p = import('./commands/init');
+}
+else {
+  throw new Error('No option matched.');
+}
 
-}, function (err,results) {
-   if (err) throw err;
-   
-   
+p.then(function (m) {
+  return m.run(cwd, projectRoot);
+})
+.catch(function (err) {
+  log.error(err);
 });
 
 
