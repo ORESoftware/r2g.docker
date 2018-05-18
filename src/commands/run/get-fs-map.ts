@@ -1,10 +1,11 @@
-import cp = require('child_process');
+'use strict';
+
 import path = require("path");
 import fs = require('fs');
 import async = require('async');
-import {getCleanTrace} from 'clean-trace';
-
 import log from "../../logger";
+
+/////////////////////////////////////////////////////////////////////
 
 export const getFSMap =  function(cb: Function){
   

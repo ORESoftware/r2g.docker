@@ -7,7 +7,7 @@ import * as util from "util";
 
 /////////////////////////////////////////////////////////////////
 
-export const installDeps = function (createProjectMap: any, pkgJSONPath: string, cb: any) {
+export const renameDeps = function (createProjectMap: any, pkgJSONPath: string, cb: any) {
   
   async.autoInject({
     

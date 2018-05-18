@@ -13,6 +13,7 @@ const docker_r2g = '.docker.r2g';
 import log from '../../logger';
 import {getFSMap} from './get-fs-map';
 import {installDeps} from './install-deps';
+import {renameDeps} from './rename-file-deps';
 
 ///////////////////////////////////////////////
 
@@ -20,8 +21,10 @@ export const run = function (cwd: string, projectRoot: string) {
   
   let pkgJSON = null, docker2gConf = null, packages = null;
   
+  const pkgJSONPth = path.resolve(projectRoot + '/package.json');
+  
   try {
-    pkgJSON = require(projectRoot + '/package.json');
+    pkgJSON = require(pkgJSONPth);
   }
   catch (err) {
     log.error('Could not read your projects package.json file.');
@@ -45,7 +48,6 @@ export const run = function (cwd: string, projectRoot: string) {
   }
   
   const dependenciesToInstall = Object.keys(packages || {});
-  
   if (dependenciesToInstall.length < 1) {
     log.error('You must supply some packages to link, otherwise this is somewhat pointless.')
   }
@@ -60,16 +62,18 @@ export const run = function (cwd: string, projectRoot: string) {
         installDeps(dependenciesToInstall, createProjectMap, cb);
       },
       
-      renamePackagesToAbsolute: function (installProjectsInMap: any, cb: any) {
-      
+      renamePackagesToAbsolute: function (createProjectMap: any, installProjectsInMap: any, cb: any) {
+        renameDeps(createProjectMap, pkgJSONPth, cb);
       },
       
-      runLocalTests: function () {
-      
+      runLocalTests: function (cb) {
+        log.info('running local tests');
+        process.nextTick(cb);
       },
       
-      r2g: function () {
-      
+      r2g: function (cb) {
+        log.info('running r2g tests');
+        process.nextTick(cb);
       }
       
     },
@@ -77,13 +81,13 @@ export const run = function (cwd: string, projectRoot: string) {
     function (err, results) {
       
       if (err && err.OK === true) {
-        log.info('Successfully initialized docker.r2g - looks like it was already initialized in this project.')
+        log.info('Successfully run this baby.')
       }
       else if (err) {
         throw getCleanTrace(err);
       }
       
-      log.info('Successfully initialized docker.r2g')
+      log.info('Successfully ran docker.r2g')
       
     });
   
