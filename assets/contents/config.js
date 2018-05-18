@@ -6,6 +6,8 @@ exports.default = {
   
   // npm install /r2g_shared_dir/Users/you/
   
+  tests: '',
+  
   packages: {
   
     // absolute local path (perhaps, if you have two projects with the same package.json name on your disk)

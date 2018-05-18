@@ -2,19 +2,21 @@
 
 set -e;
 
-if [ -f package.json ]; then
+if [ ! -f package.json ]; then
   echo "there is no package.json file in your PWD." >&2;
   false;
 fi
 
-name="$(axxel package.json 'name')";
+#name="$(axxel package.json 'name')";
 
-container="docker_r2g/$name";
-docker stop "$container"
-docker rm "$container"
+name="my_docker_r2g";
+
+container="docker_r2g_-_$name";
+docker stop "$container" || echo "no container with name $container running."
+docker rm "$container" || echo "no container with name $container could be removed."
 
 tag="docker_r2g_image/$name";
 shared="r2g_shared_dir"
 
-docker build -t "$tag" .
-docker run -it -v "$HOME:/$shared:ro" --name ts-project "$tag"
+docker build -f Dockerfile.r2g -t "$tag" .
+docker run -it -v "$HOME/WebstormProjects/oresoftware:/$shared:ro" --name "$container" "$tag"

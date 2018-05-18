@@ -31,7 +31,10 @@ COPY . .
 RUN sudo chmod -R 777  /home/node
 
 ENV PATH="./node_modules/.bin:${PATH}"
-RUN tsc
+RUN tsc || echo "could not compile"
 
-ENTRYPOINT ["docker.r2g"]
+#ENTRYPOINT ["docker_r2g"]
 
+RUN sudo chmod u+x "/home/node/app/dist/cli.js"
+
+ENTRYPOINT ["/home/node/app/dist/cli.js", "--run"]

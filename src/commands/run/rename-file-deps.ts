@@ -46,7 +46,7 @@ export const renameDeps = function (createProjectMap: any, pkgJSONPath: string, 
             
             const v = d[k];
             
-            if (String(v).startsWith('file://')) {
+            if (String(v).startsWith('file:')) {
               
               if (createProjectMap[k]) {
                 d[k] = 'file://' + createProjectMap[k];
@@ -68,6 +68,7 @@ export const renameDeps = function (createProjectMap: any, pkgJSONPath: string, 
       try {
         updateTheDepKV();
         str = JSON.stringify(rereadPkgJSON, null, 2);
+        log.info('Was about to stringify a new JSON file:', util.inspect(rereadPkgJSON));
       }
       catch (err) {
         return cb(err);

@@ -16,5 +16,5 @@ docker rm "$container"
 tag="docker_r2g_image/$name";
 shared="r2g_shared_dir"
 
-docker build -t "$tag" .
-docker run -it -v "$HOME:/$shared:ro" --name ts-project "$tag"
+docker build -f Dockerfile.r2g -t "$tag" .
+docker run -it -v "$HOME:/$shared:ro" --name "$container" "$tag"

@@ -24,6 +24,12 @@ export default [
     helpArg: 'FILE'
   },
   {
+    names: ['run',],
+    type: 'bool',
+    help: 'Run docker.r2g against your project',
+    helpArg: 'FILE'
+  },
+  {
     names: ['file', 'f'],
     type: 'string',
     help: 'File to process',

@@ -4,6 +4,7 @@
   "description": "Semver-oriented TypeScript library skeleton.",
   "main": "dist/index.js",
   "bin": {
+    "docker_r2g": "dist/cli.js",
     "docker.r2g": "dist/cli.js"
   },
   "types": "dist/index.d.ts",

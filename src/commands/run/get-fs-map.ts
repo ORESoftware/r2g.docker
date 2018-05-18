@@ -7,7 +7,7 @@ import log from "../../logger";
 
 /////////////////////////////////////////////////////////////////////
 
-export const getFSMap =  function(cb: Function){
+export const getFSMap = function (cb: Function) {
   
   const map = {} as { [key: string]: string };
   
@@ -25,7 +25,33 @@ export const getFSMap =  function(cb: Function){
         
         fs.stat(item, function (err, stats) {
           
+          if (err) {
+            log.warn(err.message);
+            return cb(null);
+          }
+          
           if (stats.isDirectory()) {
+            
+            if(item.endsWith('/.npm')){
+              return cb(null);
+            }
+  
+            if(item.endsWith('/.cache')){
+              return cb(null);
+            }
+  
+            if(item.endsWith('/node_modules')){
+              return cb(null);
+            }
+  
+            if(item.endsWith('/node_modules/')){
+              return cb(null);
+            }
+            
+            if(item.endsWith('/.nvm')){
+              return cb(null);
+            }
+            
             return searchDir(item, cb);
           }
           
@@ -69,7 +95,7 @@ export const getFSMap =  function(cb: Function){
       
       async.eachLimit(
         items,
-        3,
+        4,
         mappy,
         cb
       );

@@ -15,11 +15,14 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
         return process.nextTick(cb);
       }
       
-      const c = createProjectMap[dep];
+      const c = path.dirname(createProjectMap[dep]);
       
       const k = cp.spawn('bash');
-      const cmd = `npm install ${c};\n`;
-      k.stdin.end(cmd);
+      const cmd = `npm install --loglevel=warn ${c};`;
+      
+      log.info(`About to run the following command: '${cmd}'...`)
+      k.stdin.end(cmd + '\n');
+      k.stderr.pipe(process.stderr);
       k.once('exit', function (code) {
         
         if (code < 1) {

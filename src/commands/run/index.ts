@@ -14,6 +14,7 @@ import log from '../../logger';
 import {getFSMap} from './get-fs-map';
 import {installDeps} from './install-deps';
 import {renameDeps} from './rename-file-deps';
+import * as util from "util";
 
 ///////////////////////////////////////////////
 
@@ -40,6 +41,7 @@ export const run = function (cwd: string, projectRoot: string) {
   
   try {
     docker2gConf = require(projectRoot + '/.docker.r2g/config.js');
+    docker2gConf = docker2gConf.default || docker2gConf;
     packages = docker2gConf.packages;
   }
   catch (err) {
@@ -49,7 +51,8 @@ export const run = function (cwd: string, projectRoot: string) {
   
   const dependenciesToInstall = Object.keys(packages || {});
   if (dependenciesToInstall.length < 1) {
-    log.error('You must supply some packages to link, otherwise this is somewhat pointless.')
+    log.error('You must supply some packages to link, otherwise this is somewhat pointless.');
+    log.error('here is your configuration: ', util.inspect(docker2gConf));
   }
   
   async.autoInject({
@@ -59,19 +62,19 @@ export const run = function (cwd: string, projectRoot: string) {
       },
       
       installProjectsInMap: function (createProjectMap: any, cb: any) {
-        installDeps(dependenciesToInstall, createProjectMap, cb);
+        installDeps(createProjectMap, dependenciesToInstall, cb);
       },
       
       renamePackagesToAbsolute: function (createProjectMap: any, installProjectsInMap: any, cb: any) {
         renameDeps(createProjectMap, pkgJSONPth, cb);
       },
       
-      runLocalTests: function (cb) {
+      runLocalTests: function (renamePackagesToAbsolute: any,cb: Function) {
         log.info('running local tests');
         process.nextTick(cb);
       },
       
-      r2g: function (cb) {
+      r2g: function (runLocalTests: any, cb: Function) {
         log.info('running r2g tests');
         process.nextTick(cb);
       }
