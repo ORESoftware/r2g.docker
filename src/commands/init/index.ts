@@ -46,7 +46,7 @@ export const run = function (cwd: string, projectRoot: string) {
     function (err, results) {
       
       if (err && err.OK === true) {
-        log.info('Successfully initialized docker.r2g - looks like it was already initialized in this project.')
+        log.info('looks like it was already initialized in this project.')
       }
       else if (err) {
         throw getCleanTrace(err);

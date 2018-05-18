@@ -11,7 +11,6 @@ const contents = path.resolve(__dirname + '/../../../assets/contents');
 const Dockerfile = path.resolve(__dirname + '/../../../assets/contents/Dockerfile.r2g.original');
 const docker_r2g = '.docker.r2g';
 import log from '../../logger';
-import {getFSMap} from './get-fs-map';
 import {installDeps} from './install-deps';
 import {renameDeps} from './rename-file-deps';
 import * as util from "util";
@@ -20,7 +19,7 @@ import * as util from "util";
 
 export const run = function (cwd: string, projectRoot: string) {
   
-  let pkgJSON = null, docker2gConf = null, packages = null;
+  let pkgJSON = null, docker2gConf = null, packages = null, fsMap: any = null;
   
   const pkgJSONPth = path.resolve(projectRoot + '/package.json');
   
@@ -55,21 +54,29 @@ export const run = function (cwd: string, projectRoot: string) {
     log.error('here is your configuration: ', util.inspect(docker2gConf));
   }
   
+  try {
+    fsMap = JSON.parse(process.env.docker_r2g_fs_map)
+  }
+  catch (err) {
+    log.error('could not parse the fs map from the env var.');
+    throw getCleanTrace(err);
+  }
+  
   async.autoInject({
       
-      createProjectMap: function (cb: any) {
-        getFSMap(cb);
+      // createProjectMap: function (cb: any) {
+      //   getFSMap('/r2g_shared_dir', cb);
+      // },
+      
+      installProjectsInMap: function (cb: any) {
+        installDeps(fsMap, dependenciesToInstall, cb);
       },
       
-      installProjectsInMap: function (createProjectMap: any, cb: any) {
-        installDeps(createProjectMap, dependenciesToInstall, cb);
+      renamePackagesToAbsolute: function (installProjectsInMap: any, cb: any) {
+        renameDeps(fsMap, pkgJSONPth, cb);
       },
       
-      renamePackagesToAbsolute: function (createProjectMap: any, installProjectsInMap: any, cb: any) {
-        renameDeps(createProjectMap, pkgJSONPth, cb);
-      },
-      
-      runLocalTests: function (renamePackagesToAbsolute: any,cb: Function) {
+      runLocalTests: function (renamePackagesToAbsolute: any, cb: Function) {
         log.info('running local tests');
         process.nextTick(cb);
       },

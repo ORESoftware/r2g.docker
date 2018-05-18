@@ -4,10 +4,12 @@ import path = require("path");
 import fs = require('fs');
 import async = require('async');
 import log from "../../logger";
+import {Packages} from "./index";
+import * as util from "util";
 
 /////////////////////////////////////////////////////////////////////
 
-export const getFSMap = function (cb: Function) {
+export const getFSMap = function (searchRoot: string, packages: Packages, cb: Function) {
   
   const map = {} as { [key: string]: string };
   
@@ -32,23 +34,23 @@ export const getFSMap = function (cb: Function) {
           
           if (stats.isDirectory()) {
             
-            if(item.endsWith('/.npm')){
-              return cb(null);
-            }
-  
-            if(item.endsWith('/.cache')){
-              return cb(null);
-            }
-  
-            if(item.endsWith('/node_modules')){
-              return cb(null);
-            }
-  
-            if(item.endsWith('/node_modules/')){
+            if (item.endsWith('/.npm')) {
               return cb(null);
             }
             
-            if(item.endsWith('/.nvm')){
+            if (item.endsWith('/.cache')) {
+              return cb(null);
+            }
+            
+            if (item.endsWith('/node_modules')) {
+              return cb(null);
+            }
+            
+            if (item.endsWith('/node_modules/')) {
+              return cb(null);
+            }
+            
+            if (item.endsWith('/.nvm')) {
               return cb(null);
             }
             
@@ -67,14 +69,29 @@ export const getFSMap = function (cb: Function) {
                 
                 try {
                   parsed = JSON.parse(String(data));
+                  
                   if (parsed && parsed.name) {
-                    if (map[parsed.name]) {
+                    
+                    let nm = parsed.name;
+                    
+                    if (map[nm] && packages[nm]) {
+                      
                       log.warn('package may exist in more than one place on your fs.');
                       log.warn('pre-existing place => ', map[parsed.name]);
+                      
+                      return cb(
+                        new Error('The following requested package name exists in more than 1 location on disk ' +
+                          util.inspect({name: nm, locations: [map[nm], item]}))
+                      )
                     }
-                    map[parsed.name] = item;
+                    else if (packages[parsed.name]) {
+                      log.info('added the following package name to the map:', parsed.name);
+                      map[parsed.name] = item;
+                    }
+                    
                   }
                   return cb(null);
+                  
                 }
                 catch (err) {
                   log.error('trouble parsing package.json file at path => ', item);
@@ -104,7 +121,7 @@ export const getFSMap = function (cb: Function) {
     
   };
   
-  searchDir('/r2g_shared_dir', function (err: any) {
+  searchDir(searchRoot, function (err: any) {
     cb(err, map);
   });
   

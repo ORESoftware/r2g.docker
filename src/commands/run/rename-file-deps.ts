@@ -7,7 +7,7 @@ import * as util from "util";
 
 /////////////////////////////////////////////////////////////////
 
-export const renameDeps = function (createProjectMap: any, pkgJSONPath: string, cb: any) {
+export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: any) {
   
   async.autoInject({
     
@@ -48,8 +48,8 @@ export const renameDeps = function (createProjectMap: any, pkgJSONPath: string, 
             
             if (String(v).startsWith('file:')) {
               
-              if (createProjectMap[k]) {
-                d[k] = 'file://' + path.dirname(createProjectMap[k]);
+              if (projectMap[k]) {
+                d[k] = 'file://' + path.dirname(projectMap[k]);
               }
               else {
                 log.error('The following dep has a file:// key, but does not exist in generated map => ' + k);
@@ -68,7 +68,7 @@ export const renameDeps = function (createProjectMap: any, pkgJSONPath: string, 
       try {
         updateTheDepKV();
         str = JSON.stringify(rereadPkgJSON, null, 2);
-        log.info('Was about to stringify a new JSON file:', util.inspect(rereadPkgJSON));
+        log.info('New JSON file:', util.inspect(rereadPkgJSON));
       }
       catch (err) {
         return cb(err);

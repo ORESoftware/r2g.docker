@@ -20,6 +20,9 @@ if (opts.init) {
 else if (opts.run) {
   p = import('./commands/run');
 }
+else if (opts.exec) {
+  p = import('./commands/exec');
+}
 else {
   throw new Error('No option matched.');
 }

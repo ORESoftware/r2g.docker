@@ -7,15 +7,22 @@ if [ ! -f package.json ]; then
   false;
 fi
 
-#name="$(axxel package.json 'name')";
-name="my_docker_r2g";
 
-container="docker_r2g_-_$name";
+map="$docker_r2g_fs_map"
+search_root="$docker_r2g_search_root"
+shared="$docker_r2g_shared_dir";
+name="$docker_r2g_package_name"  # your project's package.json name field
+container="docker_r2g_$name";
+
 docker stop "$container" || echo "no container with name $container running."
 docker rm "$container" || echo "no container with name $container could be removed."
 
 tag="docker_r2g_image/$name";
-shared="r2g_shared_dir"
+
 
 docker build -f Dockerfile.r2g -t "$tag" .
-docker run -it -v "$HOME/WebstormProjects/oresoftware:/$shared:ro" --name "$container" "$tag"
+
+docker run \
+    -v "$search_root:$shared:ro"  \
+    -e docker_r2g_fs_map="$map" \
+    --name "$container" "$tag"
