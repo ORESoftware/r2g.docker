@@ -68,7 +68,7 @@ export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: an
       try {
         updateTheDepKV();
         str = JSON.stringify(rereadPkgJSON, null, 2);
-        log.info('New JSON file:', util.inspect(rereadPkgJSON));
+        log.debug('New JSON file:', util.inspect(rereadPkgJSON));
       }
       catch (err) {
         return cb(err);

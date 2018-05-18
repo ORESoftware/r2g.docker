@@ -5,6 +5,8 @@ import path = require("path");
 import fs = require('fs');
 import async = require('async');
 import {getCleanTrace} from 'clean-trace';
+import chalk from 'chalk';
+import pt from 'prepend-transform';
 
 // project
 import log from '../../logger';
@@ -42,13 +44,6 @@ export const run = function (cwd: string, projectRoot: string) {
   }
   
   pkgName = String(pkgName).replace(/[^0-9a-z]/gi, '');
-  
-  const deps = Object.assign(
-    {},
-    pkgJSON.dependencies,
-    pkgJSON.devDependencies,
-    pkgJSON.optionalDependencies
-  );
   
   try {
     docker2gConf = require(projectRoot + '/.docker.r2g/config.js');
@@ -93,6 +88,27 @@ export const run = function (cwd: string, projectRoot: string) {
     log.error('Here is your configuration:', util.inspect(docker2gConf));
   }
   
+  const deps = [
+    pkgJSON.dependencies || {},
+    pkgJSON.devDependencies || {},
+    pkgJSON.optionalDependencies || {}
+  ];
+  
+  const allDeps = deps.reduce(Object.assign, {});
+  
+  deps.forEach(function (d) {
+    Object.keys(d).forEach(function (k) {
+      const v = d[k];
+    });
+  });
+  
+  Object.keys(packages).forEach(function (k) {
+    if (!allDeps[k]) {
+      log.warn(chalk.magenta('You have the following packages key in your docker.r2g config:'), chalk.magentaBright(k));
+      log.warn(chalk.magenta('But the above key is not present as a dependency in your package.json file.'));
+    }
+  });
+  
   let mapObject = function (obj: any, fn: Function, ctx?: object) {
     return Object.keys(obj).reduce((a: any, b) => {
       a[b] = fn.call(ctx || null, b, obj[b]);
@@ -132,8 +148,8 @@ export const run = function (cwd: string, projectRoot: string) {
           })
         });
         
-        k.stdout.pipe(process.stdout);
-        k.stderr.pipe(process.stderr);
+        k.stdout.pipe(pt(chalk.blueBright('[docker.r2g]  '))).pipe(process.stdout);
+        k.stderr.pipe(pt(chalk.magenta('[docker.r2g]  '))).pipe(process.stderr);
         
         k.stdin.end(`./.docker.r2g/exec.sh`);
         k.once('exit', function (code) {

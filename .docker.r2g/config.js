@@ -1,4 +1,3 @@
-
 const path = require('path');
 
 exports.default = {
@@ -10,7 +9,7 @@ exports.default = {
   // npm install /r2g_shared_dir/Users/you/
   
   packages: {
-  
+    
     // absolute local path (perhaps, if you have two projects with the same package.json name on your disk)
     // example1: "/absolute/path/to/project/root",
     //
@@ -19,8 +18,9 @@ exports.default = {
     //
     // // if it's falsy it will be ignored
     // '@org/example3': 0
-  
-    residence: true
+    
+    residence: true,
+    // r2g: false
     
   }
   
