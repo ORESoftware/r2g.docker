@@ -9,9 +9,7 @@ import residence = require('residence');
 const contents = path.resolve(__dirname + '/../assets/contents');
 const cwd = process.cwd();
 const projectRoot = residence.findProjectRoot(cwd);
-
 import {opts} from './parse-cli-options';
-
 let p: Promise<{ run: (cwd: string, projectRoot: string) => void }>;
 
 if (opts.init) {

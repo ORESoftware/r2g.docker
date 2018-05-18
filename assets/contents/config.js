@@ -6,10 +6,13 @@ exports.default = {
   
   // npm install /r2g_shared_dir/Users/you/
   
+  
+  anyLocalPackage: true,
+  
   packages: {
   
     // absolute local path (perhaps, if you have two projects with the same package.json name on your disk)
-    example1: "/absolute/path/to/project/root",
+    example1: "/absolute/local/path/to/project/root",
     
     // it's truthy non-string it will be discovered on your disk
     example2: true,

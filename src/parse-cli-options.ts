@@ -19,7 +19,7 @@ if (opts.help) {
 }
 
 if (opts.version) {
-   console.log('version:', 'foo')
+  console.log('version:', 'foo');
   process.exit(0);
 }
 
