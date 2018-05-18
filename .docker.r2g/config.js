@@ -1,8 +1,15 @@
 const path = require('path');
 
+
+if(!path.isAbsolute(process.env.MY_DOCKER_R2G_SEARCH_ROOT || '')){
+  throw new Error('Please the env var MY_DOCKER_R2G_SEARCH_ROOT to an absolute path.');
+}
+
 exports.default = {
   
-  searchRoot: path.resolve(process.env.HOME + '/WebstormProjects/oresoftware'),
+  
+  searchRoot: path.resolve(process.env.MY_DOCKER_R2G_SEARCH_ROOT),
+  // searchRoot: path.resolve(process.env.HOME + '/WebstormProjects/oresoftware'),
   
   // the following packages will be installed in the Docker container using this pattern:
   

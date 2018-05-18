@@ -1,11 +1,14 @@
+
+const path = require('path');
+
 exports.default = {
   
-  searchRoot: process.env.HOME,
+  
+  searchRoot: path.resolve(process.env.HOME),
   
   // the following packages will be installed in the Docker container using this pattern:
   
   // npm install /r2g_shared_dir/Users/you/
-  
   tests: '',
   
   packages: {
