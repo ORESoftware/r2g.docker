@@ -11,95 +11,65 @@ const contents = path.resolve(__dirname + '/../../../assets/contents');
 const Dockerfile = path.resolve(__dirname + '/../../../assets/contents/Dockerfile.r2g.original');
 const docker_r2g = '.docker.r2g';
 import log from '../../logger';
+import {getFSMap} from './get-fs-map';
+import {installDeps} from './install-deps';
 
 ///////////////////////////////////////////////
 
 export const run = function (cwd: string, projectRoot: string) {
   
-  const dockerfileDest = path.resolve(projectRoot + '/Dockerfile.r2g');
+  let pkgJSON = null, docker2gConf = null, packages = null;
+  
+  try {
+    pkgJSON = require(projectRoot + '/package.json');
+  }
+  catch (err) {
+    log.error('Could not read your projects package.json file.');
+    throw getCleanTrace(err);
+  }
+  
+  const deps = Object.assign(
+    {},
+    pkgJSON.dependencies,
+    pkgJSON.devDependencies,
+    pkgJSON.optionalDependencies
+  );
+  
+  try {
+    docker2gConf = require(projectRoot + '/.docker.r2g/config.js');
+    packages = docker2gConf.packages;
+  }
+  catch (err) {
+    log.error('Could not read your .docker.r2g/config.js file.');
+    throw getCleanTrace(err);
+  }
+  
+  const dependenciesToInstall = Object.keys(packages || {});
+  
+  if (dependenciesToInstall.length < 1) {
+    log.error('You must supply some packages to link, otherwise this is somewhat pointless.')
+  }
   
   async.autoInject({
       
       createProjectMap: function (cb: any) {
-        
-        const map = {} as { [key: string]: string };
-        
-        const searchDir = function (dir: string, cb: any) {
-          
-          fs.readdir(dir, function (err, items) {
-            
-            if (err) {
-              return cb(err);
-            }
-            
-            async.eachLimit(items, 3, function (item, cb) {
-                
-                item = path.resolve(dir + '/' + item);
-                
-                fs.stat(item, function (err, stats) {
-                  
-                  if (stats.isDirectory()) {
-                    return searchDir(item, cb);
-                  }
-                  
-                  if (stats.isFile()) {
-                    if (item.endsWith('/package.json')) {
-                      return fs.readFile(item, function (err, data) {
-                        
-                        if (err) {
-                          return cb(err);
-                        }
-                        
-                        let parsed = null;
-                        
-                        try {
-                          parsed = JSON.parse(String(data));
-                          if (parsed && parsed.name) {
-                            if (map[parsed.name]) {
-                              log.warn('package may exist in more than one place on your fs.');
-                              log.warn('pre-existing place => ', map[parsed.name]);
-                            }
-                            map[parsed.name] = item;
-                          }
-                          return cb(null);
-                        }
-                        catch (err) {
-                          log.error('trouble parsing package.json file at path => ', item);
-                          console.error(err.message);
-                          return cb(err);
-                        }
-                        
-                      });
-                    }
-                    
-                  }
-                  
-                  cb(null);
-                  
-                });
-                
-              },
-              cb);
-            
-          });
-          
-        };
-        
-        searchDir('/r2g_shared_dir', function (err: any) {
-          cb(err, map);
-        });
-        
+        getFSMap(cb);
       },
       
-      installProjectsInMap: function (mkdir: any, cb: any) {
+      installProjectsInMap: function (createProjectMap: any, cb: any) {
+        installDeps(dependenciesToInstall, createProjectMap, cb);
+      },
+      
+      renamePackagesToAbsolute: function (installProjectsInMap: any, cb: any) {
       
       },
       
-      createDockerfile: function (mkdir: any, cb: any) {
-        fs.createReadStream(Dockerfile)
-        .pipe(fs.createWriteStream(dockerfileDest))
-        .once('error', cb)
-        .once('end', cb);
+      runLocalTests: function () {
+      
+      },
+      
+      r2g: function () {
+      
       }
       
     },
