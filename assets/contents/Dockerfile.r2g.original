@@ -8,11 +8,10 @@ RUN apt-get install -y netcat
 RUN sudo echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER node
-RUN mkdir -p /home/node/app
+RUN mkdir -p /home/node/app/node_modules
 WORKDIR /home/node/app
 
 RUN sudo chmod -R 777  /home/node
-
 RUN sudo chown -R $(whoami) $(npm config get prefix)/lib
 RUN sudo chown -R $(whoami) $(npm config get prefix)/lib/node_modules
 RUN sudo chown -R $(whoami) $(npm config get prefix)/bin
