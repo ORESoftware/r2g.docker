@@ -11,6 +11,8 @@ const contents = path.resolve(__dirname + '/../../../assets/contents');
 const Dockerfile = path.resolve(__dirname + '/../../../assets/contents/Dockerfile.r2g.original');
 const docker_r2g = '.docker.r2g';
 import log from '../../logger';
+import chalk from "chalk";
+import * as util from "util";
 
 ///////////////////////////////////////////////
 
@@ -24,17 +26,35 @@ export const run = function (cwd: string, projectRoot: string) {
         const k = cp.spawn('bash');
         k.stdin.end(`mkdir ./${docker_r2g}`);
         k.once('exit', function (code) {
-          code > 0 ? cb({OK: true}) : cb(null);
+          cb(null, code);
         });
       },
       
       copyContents: function (mkdir: any, cb: any) {
+        
+        if (mkdir) {
+          log.info(chalk.yellow('Could not create .docker.r2g folder (already exists?).'));
+          return process.nextTick(cb);
+        }
+        
         const k = cp.spawn('bash');
         k.stdin.end(`cp -R ${contents}/* ${cwd}/${docker_r2g}`);
         k.once('exit', cb);
       },
       
-      createDockerfile: function (mkdir: any, cb: any) {
+      checkIfDockerfileExists: function (cb: any) {
+        fs.stat(dockerfileDest, function (err, stats) {
+          cb(null, stats);
+        });
+      },
+      
+      createDockerfile: function (checkIfDockerfileExists: any, cb: any) {
+        
+        if (checkIfDockerfileExists) {
+          log.info(chalk.yellow('Could not create Dockerfile.r2g file (already exists?).'));
+          return process.nextTick(cb);
+        }
+        
         fs.createReadStream(Dockerfile)
         .pipe(fs.createWriteStream(dockerfileDest))
         .once('error', cb)
@@ -43,16 +63,18 @@ export const run = function (cwd: string, projectRoot: string) {
       
     },
     
-    function (err, results) {
+    function (err: any, results) {
       
-      if (err && err.OK === true) {
-        log.info('looks like it was already initialized in this project.')
+      if (err && err.OK) {
+        log.warn(chalk.blueBright('docker.r2g may have been initialized with some problems.'));
+        log.warn(util.inspect(err));
       }
       else if (err) {
         throw getCleanTrace(err);
       }
-      
-      log.info('Successfully initialized docker.r2g')
+      else {
+        log.info(chalk.green('Successfully initialized docker.r2g'))
+      }
       
     });
   

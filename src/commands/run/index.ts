@@ -2,14 +2,10 @@
 
 import cp = require('child_process');
 import path = require("path");
-import fs = require('fs');
 import async = require('async');
 import {getCleanTrace} from 'clean-trace';
 
 // project
-const contents = path.resolve(__dirname + '/../../../assets/contents');
-const Dockerfile = path.resolve(__dirname + '/../../../assets/contents/Dockerfile.r2g.original');
-const docker_r2g = '.docker.r2g';
 import log from '../../logger';
 import {installDeps} from './install-deps';
 import {renameDeps} from './rename-file-deps';
@@ -31,13 +27,6 @@ export const run = function (cwd: string, projectRoot: string) {
     log.error(chalk.magentaBright('Could not read your projects package.json file.'));
     throw getCleanTrace(err);
   }
-  
-  const deps = Object.assign(
-    {},
-    pkgJSON.dependencies,
-    pkgJSON.devDependencies,
-    pkgJSON.optionalDependencies
-  );
   
   try {
     docker2gConf = require(projectRoot + '/.docker.r2g/config.js');
@@ -65,10 +54,6 @@ export const run = function (cwd: string, projectRoot: string) {
   
   async.autoInject({
       
-      // createProjectMap: function (cb: any) {
-      //   getFSMap('/r2g_shared_dir', cb);
-      // },
-      
       installProjectsInMap: function (cb: any) {
         installDeps(fsMap, dependenciesToInstall, cb);
       },
@@ -93,10 +78,10 @@ export const run = function (cwd: string, projectRoot: string) {
       
     },
     
-    function (err, results) {
+    function (err: any, results) {
       
       if (err && err.OK === true) {
-        log.info('Successfully run this baby.')
+        log.info('Successfully run this baby, with a warning:', util.inspect(err, {breakLength: Infinity}));
       }
       else if (err) {
         throw getCleanTrace(err);
