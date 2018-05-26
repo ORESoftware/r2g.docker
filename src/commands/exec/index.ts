@@ -33,7 +33,7 @@ export const run = function (cwd: string, projectRoot: string) {
     pkgName = pkgJSON.name;
   }
   catch (err) {
-    log.error('Could not read your projects package.json file.');
+    log.error(chalk.magentaBright('Could not read your projects package.json file.'));
     throw getCleanTrace(err);
   }
   
@@ -52,7 +52,7 @@ export const run = function (cwd: string, projectRoot: string) {
     searchRoot = path.resolve(docker2gConf.searchRoot);
   }
   catch (err) {
-    log.error('Could not read your .docker.r2g/config.js file.');
+    log.error(chalk.magentaBright('Could not read your .docker.r2g/config.js file.'));
     throw getCleanTrace(err);
   }
   
@@ -111,8 +111,7 @@ export const run = function (cwd: string, projectRoot: string) {
   
   let mapObject = function (obj: any, fn: Function, ctx?: object) {
     return Object.keys(obj).reduce((a: any, b) => {
-      a[b] = fn.call(ctx || null, b, obj[b]);
-      return a;
+      return (a[b] = fn.call(ctx || null, b, obj[b])), a;
     }, {});
   };
   
@@ -128,13 +127,9 @@ export const run = function (cwd: string, projectRoot: string) {
         
         const ln = searchRoot.length;
         
-        console.log('get map before:', getMap);
-        
         const mapped = mapObject(getMap, function (k: string, v: any) {
           return path.resolve(r2g_shared_dir + String(v).slice(ln));
         });
-        
-        console.log('get map after:', mapped);
         
         const map = JSON.stringify(mapped);
         

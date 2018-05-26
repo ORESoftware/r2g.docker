@@ -12,8 +12,6 @@ const projectRoot = residence.findProjectRoot(cwd);
 import {opts} from './parse-cli-options';
 let p: Promise<{ run: (cwd: string, projectRoot: string) => void }>;
 
-// 555
-
 if (opts.init) {
   p = import('./commands/init');
 }

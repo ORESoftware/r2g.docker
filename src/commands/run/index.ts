@@ -14,6 +14,7 @@ import log from '../../logger';
 import {installDeps} from './install-deps';
 import {renameDeps} from './rename-file-deps';
 import * as util from "util";
+import chalk from "chalk";
 
 ///////////////////////////////////////////////
 
@@ -27,7 +28,7 @@ export const run = function (cwd: string, projectRoot: string) {
     pkgJSON = require(pkgJSONPth);
   }
   catch (err) {
-    log.error('Could not read your projects package.json file.');
+    log.error(chalk.magentaBright('Could not read your projects package.json file.'));
     throw getCleanTrace(err);
   }
   
@@ -44,7 +45,7 @@ export const run = function (cwd: string, projectRoot: string) {
     packages = docker2gConf.packages;
   }
   catch (err) {
-    log.error('Could not read your .docker.r2g/config.js file.');
+    log.error(chalk.magentaBright('Could not read your .docker.r2g/config.js file.'));
     throw getCleanTrace(err);
   }
   
