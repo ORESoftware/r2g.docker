@@ -1,6 +1,6 @@
 {
   "name": "@oresoftware/docker.r2g",
-  "version": "0.0.102",
+  "version": "0.0.103",
   "description": "Semver-oriented TypeScript library skeleton.",
   "main": "dist/index.js",
   "bin": {
@@ -35,11 +35,13 @@
     "clean-trace": "latest",
     "dashdash": "^1.14.1",
     "prepend-transform": "latest",
-    "residence": "latest"
+    "residence": "latest",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "@types/async": "^2.0.49",
     "@types/core-js": "^0.9.46",
-    "@types/node": "^9.6.2"
+    "@types/node": "^9.6.2",
+    "@types/uuid": "^3.4.3"
   }
 }
