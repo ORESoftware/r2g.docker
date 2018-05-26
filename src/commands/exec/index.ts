@@ -104,8 +104,8 @@ export const run = function (cwd: string, projectRoot: string) {
   
   Object.keys(packages).forEach(function (k) {
     if (!allDeps[k]) {
-      log.warn(chalk.magenta('You have the following packages key in your docker.r2g config:'), chalk.magentaBright(k));
-      log.warn(chalk.magenta('But the above key is not present as a dependency in your package.json file.'));
+      log.warn(chalk.gray('You have the following packages key in your docker.r2g config:'), chalk.magentaBright(k));
+      log.warn(chalk.bold('But the above key is not present as a dependency in your package.json file.'));
     }
   });
   

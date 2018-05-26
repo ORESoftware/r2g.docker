@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ORESoftware/typescript-library-skeleton.git"
+    "url": "git+https://github.com/ORESoftware/docker.r2g.git"
   },
   "keywords": [
     "typescript",
@@ -26,21 +26,18 @@
   "author": "TODO Yo.Mama",
   "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
-    "url": "https://github.com/ORESoftware/typescript-library-skeleton/issues"
+    "url": "https://github.com/ORESoftware/docker.r2g/issues"
   },
-  "homepage": "https://github.com/ORESoftware/typescript-library-skeleton#readme",
+  "homepage": "https://github.com/ORESoftware/docker.r2g#readme",
   "dependencies": {
-    "@oresoftware/modify.json": "latest",
     "async": "^2.6.0",
     "chalk": "^2.4.1",
-    "clean-trace": "0.0.104",
+    "clean-trace": "latest",
     "dashdash": "^1.14.1",
     "prepend-transform": "latest",
-    "residence": "0.0.207",
-    "typescript": "^2.8.3"
+    "residence": "latest"
   },
   "devDependencies": {
-    "r2g": "latest",
     "@types/async": "^2.0.49",
     "@types/core-js": "^0.9.46",
     "@types/node": "^9.6.2"
