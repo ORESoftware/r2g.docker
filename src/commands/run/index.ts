@@ -11,6 +11,7 @@ import {installDeps} from './install-deps';
 import {renameDeps} from './rename-file-deps';
 import * as util from "util";
 import chalk from "chalk";
+import * as fs from "fs";
 
 ///////////////////////////////////////////////
 
@@ -59,12 +60,21 @@ export const run = function (cwd: string, projectRoot: string) {
       },
       
       renamePackagesToAbsolute: function (installProjectsInMap: any, cb: any) {
-        renameDeps(fsMap, pkgJSONPth, cb);
+        renameDeps(installProjectsInMap, pkgJSONPth, cb);
       },
       
       runLocalTests: function (renamePackagesToAbsolute: any, cb: Function) {
         log.info('running local tests');
-        process.nextTick(cb);
+        fs.readFile(pkgJSONPth, function (err, data) {
+          
+          if (err) {
+            return cb(err);
+          }
+          
+          log.info('here is the package.json file:', String(data));
+          cb(null);
+        });
+        
       },
       
       r2g: function (runLocalTests: any, cb: Function) {

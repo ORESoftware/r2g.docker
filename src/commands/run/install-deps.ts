@@ -8,7 +8,9 @@ import chalk from "chalk";
 
 /////////////////////////////////////////////////////////////////
 
-export const installDeps = function (createProjectMap: any, dependenciesToInstall: Array<string>, cb :any) {
+export const installDeps = function (createProjectMap: any, dependenciesToInstall: Array<string>, cb: any) {
+  
+  const finalMap = {} as any;
   
   async.eachSeries(dependenciesToInstall, function (dep, cb) {
       
@@ -17,11 +19,13 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
         return process.nextTick(cb);
       }
       
-      const c = path.dirname(createProjectMap[dep]);
+      const d = createProjectMap[dep];
+      const c = path.dirname(d);
       
       const k = cp.spawn('bash');
       const id = uuid.v4();
-      const dest = `$HOME/.docker_r2g_cache/${id}`;
+      const dest = path.resolve(`${process.env.HOME}/.docker_r2g_cache/${id}`);
+      finalMap[dep] = dest;
       
       const cmd = [
         `set -e`,
@@ -48,5 +52,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       
     },
     
-    cb);
+    function (err) {
+      cb(err, finalMap);
+    });
 };

@@ -7,7 +7,7 @@ export const log = {
   info: console.log.bind(console, chalk.gray('[docker.r2g]')),
   warn: console.error.bind(console, chalk.bold('[docker.r2g]')),
   error: console.error.bind(console, chalk.redBright.bold('[docker.r2g]')),
-  debug: function () {
+  debug: function (...args: any[]) {
     isDebug && console.log('docker.r2g', ...arguments);
   }
 };

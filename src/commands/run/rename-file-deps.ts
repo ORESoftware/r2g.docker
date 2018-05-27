@@ -1,4 +1,5 @@
-import cp = require('child_process');
+'use strict';
+
 import path = require("path");
 import fs = require('fs');
 import async = require('async');
@@ -9,6 +10,8 @@ import * as util from "util";
 
 export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: any) {
   
+  log.info('here is the project map now:', projectMap);
+  
   async.autoInject({
     
     rereadPkgJSON: function (cb: Function) {
@@ -18,6 +21,7 @@ export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: an
         if (err) {
           return cb(err);
         }
+        
         try {
           return cb(null, JSON.parse(String(data)));
         }
@@ -46,17 +50,26 @@ export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: an
             
             const v = d[k];
             
-            if (String(v).startsWith('file:')) {
+            if (v && projectMap[k]) {
               
-              if (projectMap[k]) {
-                d[k] = 'file://' + path.dirname(projectMap[k]);
-              }
-              else {
-                log.error('The following dep has a file:// key, but does not exist in generated map => ' + k);
-                throw 'Please check your package.json file: ' + util.inspect(rereadPkgJSON)
-              }
+              d[k] = 'file://' + projectMap[k];
+              
+              // log.error('The following dep has a file:// key, but does not exist in generated map => ' + k);
+              // throw 'Please check your package.json file: ' + util.inspect(rereadPkgJSON);
               
             }
+            
+            // if (String(v).startsWith('file:')) {
+            //
+            //   if (projectMap[k]) {
+            //     d[k] = 'file://' + path.dirname(projectMap[k]);
+            //   }
+            //   else {
+            //     log.error('The following dep has a file:// key, but does not exist in generated map => ' + k);
+            //     throw 'Please check your package.json file: ' + util.inspect(rereadPkgJSON)
+            //   }
+            //
+            // }
             
           });
           
