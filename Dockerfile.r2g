@@ -26,8 +26,8 @@ RUN sudo chown -R $(whoami) /usr/local/lib
 RUN sudo chown -R $(whoami) /usr/local/etc
 
 RUN npm cache clear -f;
-RUN npm cache clean -f;  # comment a3
-RUN npm install --loglevel=warn -g "r2g"
+RUN npm cache clean -f;  # comment a4
+RUN npm install --loglevel=warn -g "https://github.com/ORESoftware/r2g"
 
 COPY . .
 RUN npm install --loglevel=warn
