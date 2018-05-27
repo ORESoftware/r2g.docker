@@ -104,7 +104,7 @@ export const run = function (cwd: string, projectRoot: string) {
   
   Object.keys(packages).forEach(function (k) {
     if (!allDeps[k]) {
-      log.warn(chalk.gray('You have the following packages key in your docker.r2g config:'), chalk.magentaBright(k));
+      log.warn(chalk.gray('You have the following packages key in your .docker.r2g/config.js file:'), chalk.magentaBright(k));
       log.warn(chalk.bold('But the above key is not present as a dependency in your package.json file.'));
     }
   });
@@ -161,7 +161,13 @@ export const run = function (cwd: string, projectRoot: string) {
         throw getCleanTrace(err);
       }
       
-      console.log('all done, with results being:', util.inspect(results));
+      log.info(chalk.bold('All done, with results being:'));
+      Object.keys(results).forEach(function (k) {
+        log.info(
+          chalk.blueBright.bold(k), ':',
+          chalk.blueBright(util.inspect(results[k], {breakLength: Infinity}))
+        );
+      });
       
     });
   

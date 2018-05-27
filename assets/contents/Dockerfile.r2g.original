@@ -29,6 +29,8 @@ RUN npm cache clean -f;
 RUN npm install --loglevel=warn -g "@oresoftware/docker.r2g"
 RUN npm install --loglevel=warn -g "@oresoftware/r2g"
 
+ARG CACHEBUST=1
+
 COPY . .
 
 RUN sudo chmod -R 777  /home/node
