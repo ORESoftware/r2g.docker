@@ -30,8 +30,8 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       const cmd = [
         `set -e`,
         `mkdir -p "${dest}"`,
-        `cp -R "${c}"/* "${dest}"`,
-        `npm install --loglevel=warn "${dest}"`
+        `rsync -r --exclude="node_modules" "${c}"/* "${dest}"`,
+        `npm install --loglevel=warn "${dest}";`
       ]
       .join('; ');
       

@@ -51,12 +51,11 @@ export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: an
             const v = d[k];
             
             if (v && projectMap[k]) {
-              
               d[k] = 'file://' + projectMap[k];
-              
-              // log.error('The following dep has a file:// key, but does not exist in generated map => ' + k);
-              // throw 'Please check your package.json file: ' + util.inspect(rereadPkgJSON);
-              
+            }
+            else if (v && String(v).startsWith('file:')) {
+              log.error('The following dep has a file:// key, but does not exist in generated map => ' + k);
+              throw 'Please check your package.json file: ' + util.inspect(rereadPkgJSON);
             }
             
             // if (String(v).startsWith('file:')) {

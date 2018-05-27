@@ -4,7 +4,9 @@ RUN apt-get -y update
 RUN apt-get -y install sudo
 RUN sudo apt-get -y update
 RUN apt-get install -y netcat
+RUN apt-get install -y rsync
 
+ENV docker_r2g_in_container=yes
 RUN sudo echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER node
@@ -24,7 +26,7 @@ RUN sudo chown -R $(whoami) /usr/local/lib
 RUN sudo chown -R $(whoami) /usr/local/etc
 
 RUN npm cache clear -f;
-RUN npm cache clean -f;
+RUN npm cache clean -f;  # comment a3
 RUN npm install --loglevel=warn -g "r2g"
 
 COPY . .

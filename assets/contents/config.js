@@ -1,27 +1,19 @@
-
+// note: only include dependencies in this file, which are in your project's package.json file
 const path = require('path');
 
-if(!path.isAbsolute(process.env.MY_DOCKER_R2G_SEARCH_ROOT || '')){
+if (!path.isAbsolute(process.env.MY_DOCKER_R2G_SEARCH_ROOT || '')) {
   throw new Error('Please set the env var "MY_DOCKER_R2G_SEARCH_ROOT" to an absolute path.');
 }
 
-
 exports.default = {
   
-  
   searchRoot: path.resolve(process.env.MY_DOCKER_R2G_SEARCH_ROOT),
-  
-  // the following packages will be installed in the Docker container using this pattern:
-  // npm install /r2g_shared_dir/Users/you/
-  
   tests: '',
-  
   packages: {
-  
+    
     'example1': true,
     'example2': true,
-    // if it's falsy it will be ignored
-    '@org/example3': 0
+    '@org/example3': 0  // if it's falsy it will be ignored
     
   }
   
