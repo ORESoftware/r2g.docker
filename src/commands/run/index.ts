@@ -64,15 +64,18 @@ export const run = function (cwd: string, projectRoot: string) {
       },
       
       runLocalTests: function (renamePackagesToAbsolute: any, cb: Function) {
-        log.info('running local tests');
+        
+        log.info(chalk.magentaBright('now running local tests'));
+        
         fs.readFile(pkgJSONPth, function (err, data) {
           
           if (err) {
             return cb(err);
           }
           
-          log.info('here is the package.json file:', String(data));
+          log.info(chalk.bold('here is updated the package.json file:'), String(data));
           cb(null);
+          
         });
         
       },
@@ -80,7 +83,7 @@ export const run = function (cwd: string, projectRoot: string) {
       r2g: function (runLocalTests: any, cb: Function) {
         log.info('running r2g tests');
         const k = cp.spawn('bash');
-        k.stdin.end('r2g;');
+        k.stdin.end('r2g run;');
         k.stdout.pipe(process.stdout);
         k.stderr.pipe(process.stderr);
         k.once('exit', cb);

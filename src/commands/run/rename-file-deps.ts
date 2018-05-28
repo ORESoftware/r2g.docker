@@ -5,12 +5,17 @@ import fs = require('fs');
 import async = require('async');
 import log from "../../logger";
 import * as util from "util";
+import chalk from "chalk";
 
 /////////////////////////////////////////////////////////////////
 
 export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: any) {
   
-  log.info('here is the project map now:', projectMap);
+  log.info('here is the project map now:');
+  
+  Object.keys(projectMap).forEach(function(k){
+    log.info(chalk.bold(k), chalk.blueBright(util.inspect(projectMap[k])));
+  });
   
   async.autoInject({
     
