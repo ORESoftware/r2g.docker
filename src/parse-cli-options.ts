@@ -1,9 +1,10 @@
 import options from './cli-options';
 const dashdash = require('dashdash');
+import residence = require('residence');
 
-const parser = dashdash.createParser({options: options});
+const parser = dashdash.createParser({options});
 
-let opts: object;
+let opts: any;
 
 try {
   opts = parser.parse(process.argv);
@@ -23,7 +24,10 @@ if (opts.version) {
   process.exit(0);
 }
 
-export {opts};
+
+const cwd = process.cwd();
+const projectRoot = residence.findProjectRoot(cwd);
+export {opts, cwd, projectRoot};
 
 
 
