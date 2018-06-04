@@ -34,5 +34,7 @@ ARG CACHEBUST=1
 
 COPY . .
 
-ENTRYPOINT ["docker.r2g", "--run"]
+RUN sudo chmod -R 777  /home/node
+
+ENTRYPOINT ["docker.r2g", "run"]
 
