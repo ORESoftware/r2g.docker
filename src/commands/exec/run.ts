@@ -84,8 +84,8 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
 
   const dependenciesToInstall = Object.keys(packages);
   if (dependenciesToInstall.length < 1) {
-    log.error('You should supply some packages to link, otherwise this is somewhat pointless.');
-    log.error('Here is your configuration:', util.inspect(docker2gConf));
+    log.warn('You should supply some packages to link, otherwise this is somewhat pointless.');
+    log.warn('Here is your configuration:\n', docker2gConf);
   }
 
   const deps = [
