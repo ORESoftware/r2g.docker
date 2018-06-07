@@ -26,11 +26,10 @@ RUN sudo chown -R $(whoami) $(npm config get prefix)/share
 RUN sudo chown -R $(whoami) /usr/local/lib
 RUN sudo chown -R $(whoami) /usr/local/etc
 
-
-RUN npm install --loglevel=warn -g "@oresoftware/docker.r2g"
-RUN npm install --loglevel=warn -g "@oresoftware/r2g"
-
 ARG CACHEBUST=1
+
+RUN npm install --loglevel=warn -g "@oresoftware/docker.r2g@latest"
+RUN npm install --loglevel=warn -g "@oresoftware/r2g@latest"
 
 COPY . .
 
