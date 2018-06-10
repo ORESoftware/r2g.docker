@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 
-DIRN="$(dirname "$0")"
-RL="$(readlink "$0")";
-EXECDIR="$(dirname $(dirname "$RL"))";
-MYPATH="$DIRN/$EXECDIR";
-X="$(cd $(dirname ${MYPATH}) && pwd)/$(basename ${MYPATH})"
-commands="$X/dist/commands"
+dir_name="$(dirname "$0")"
+read_link="$(readlink "$0")";
+exec_dir="$(dirname $(dirname "$read_link"))";
+my_path="$dir_name/$exec_dir";
+basic_path="$(cd $(dirname ${my_path}) && pwd)/$(basename ${my_path})"
+commands="$basic_path/dist/commands"
 
 cmd="$1";
 shift 1;

@@ -25,22 +25,25 @@ RUN sudo chown -R $(whoami) $(npm config get prefix)/share
 RUN sudo chown -R $(whoami) /usr/local/lib
 RUN sudo chown -R $(whoami) /usr/local/etc
 
+ARG CACHEBUST=1
+
 RUN npm cache clear -f;
 RUN npm cache clean -f;
 
-ARG CACHEBUST=1
-
-RUN npm install --loglevel=warn -g "https://github.com/ORESoftware/r2g"
+RUN npm install --loglevel=warn -g "@oresoftware/r2g@latest"
 
 COPY . .
-RUN npm install --loglevel=warn
 
 RUN sudo chmod -R 777  /home/node
 ENV PATH="./node_modules/.bin:${PATH}"
-RUN sudo chmod u+x "/home/node/app/dist/cli.js"
 
-ENTRYPOINT ["/home/node/app/dist/cli.js", "--run"]
+RUN npm link -f
 
+
+#ENTRYPOINT ["/home/node/app/assets/cli.sh", "run"]
+
+
+ENTRYPOINT ["dkr2g", "run"]
 
 
 

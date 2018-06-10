@@ -18,3 +18,15 @@
  in node_modules, then you will got non-deterministic results. require calls to core/built-in libraries are fine.
 
 */
+
+
+const assert = require('assert');
+const path = require('path');
+const cp = require('child_process');
+const os = require('os');
+const fs = require('fs');
+const EE = require('events');
+
+
+
+// your test goes here
