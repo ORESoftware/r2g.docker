@@ -24,4 +24,5 @@ dkr2g(){
 
 
 export -f dkr2g;
+export -f docker.r2g;
 export -f docker_r2g;

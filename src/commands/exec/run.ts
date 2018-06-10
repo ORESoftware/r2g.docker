@@ -162,6 +162,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
       }
 
       log.info(chalk.bold('All done, with results being:'));
+
       Object.keys(results).forEach(function (k) {
         log.info(
           chalk.blueBright.bold(k), ':',
