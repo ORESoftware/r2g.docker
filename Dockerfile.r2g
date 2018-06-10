@@ -35,9 +35,11 @@ RUN npm install --loglevel=warn -g "@oresoftware/r2g@latest"
 COPY . .
 
 RUN sudo chmod -R 777  /home/node
+
 ENV PATH="./node_modules/.bin:${PATH}"
 
 RUN npm link -f
+
 
 
 #ENTRYPOINT ["/home/node/app/assets/cli.sh", "run"]

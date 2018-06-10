@@ -11,9 +11,9 @@ docker_r2g(){
 
 dkr2g(){
 
-  local which_dkr2g="$(command -v dkr2g)"
+  local whch="$(command -v dkr2g)"
 
-  if [ -z "$which_dkr2g" ]; then
+  if [ -z "$whch" ]; then
        npm install -g --loglevel=warn "@oresoftware/docker.r2g"  || {
           return 1;
       }
@@ -24,3 +24,4 @@ dkr2g(){
 
 
 export -f dkr2g;
+export -f docker_r2g;
