@@ -86,15 +86,30 @@ export const renameDeps = function (projectMap: any, pkgJSONPath: string, cb: an
       try {
         updateTheDepKV();
         str = JSON.stringify(rereadPkgJSON, null, 2);
-        log.debug('New JSON file:', util.inspect(rereadPkgJSON));
+        log.debug('Updated package.json file:', rereadPkgJSON);
       }
       catch (err) {
-        return cb(err, null);
+        return process.nextTick(cb, err, null);
       }
 
       // save the json object back to disk
       fs.writeFile(pkgJSONPath, str, function (err) {
-        cb(err, null);
+
+        if (err) {
+          return cb(err, null);
+        }
+
+        fs.readFile(pkgJSONPath, function (err, data) {
+
+          if (err) {
+            return cb(err, null);
+          }
+
+          log.info(chalk.bold('here is updated the package.json file:'), String(data));
+          cb(null, null);
+
+        });
+
       });
 
     }

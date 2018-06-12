@@ -14,7 +14,11 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
 
   const finalMap = {} as any;
 
-  async.mapLimit(dependenciesToInstall, 3, function (dep, cb) {
+  if (dependenciesToInstall.length < 1) {
+    return process.nextTick(cb, null, finalMap);
+  }
+
+  async.eachLimit(dependenciesToInstall, 3, function (dep, cb) {
 
       if (!createProjectMap[dep]) {
         log.info('dependency is not in the local map:', dep);
@@ -46,10 +50,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       k.once('exit', function (code) {
 
         if (code < 1) {
-          return cb(null, {
-            dest,
-            basename
-          });
+          return cb(null);
         }
 
         log.error('The following command failed:');
@@ -60,37 +61,41 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
 
     },
 
-    function (err, results: Array<any>) {
+    function (err) {
 
-      if (err) {
-        return cb(err);
-      }
+      process.nextTick(cb, err, finalMap);
 
-      const k = cp.spawn('bash');
+      /*     if (err) {
+             return cb(err);
+           }
 
-      const getMap = function () {
-        return results.filter(Boolean).map(function (v) {
-          return `"${v.dest}/${v.basename}"`
-        })
-        .join(' ');
-      };
+           const k = cp.spawn('bash');
 
-      const cmd = `npm install --loglevel=warn ${getMap()} `;
-      log.info('now running the following command:', chalk.green.bold(cmd));
-      k.stdin.end(cmd);
+           const getMap = function () {
+             return results.filter(Boolean).map(function (v) {
+               return `"${v.dest}/${v.basename}"`
+             })
+             .join(' ');
+           };
 
-      k.stderr.pipe(process.stderr);
+           const cmd = `npm install --loglevel=warn ${getMap()} `;
+           log.info('now running the following command:', chalk.green.bold(cmd));
+           k.stdin.end(cmd);
 
-      k.once('exit', function (code) {
+           k.stderr.pipe(process.stderr);
 
-        if (code < 1) {
-          cb(null, finalMap);
-        }
-        else {
-          cb(new Error('npm install process exitted with code greater than 0.'));
-        }
+           k.once('exit', function (code) {
 
-      });
+             if (code < 1) {
+               cb(null, finalMap);
+             }
+             else {
+               cb(new Error('npm install process exitted with code greater than 0.'));
+             }
 
+           });
+
+         });*/
     });
+  
 };

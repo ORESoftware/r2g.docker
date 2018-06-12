@@ -55,28 +55,27 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
 
   async.autoInject({
 
-      installProjectsInMap: function (cb: any) {
+      copyProjectsInMap: function (cb: any) {
         installDeps(fsMap, dependenciesToInstall, cb);
       },
 
-      renamePackagesToAbsolute: function (installProjectsInMap: any, cb: any) {
-        renameDeps(installProjectsInMap, pkgJSONPth, cb);
+      renamePackagesToAbsolute: function (copyProjectsInMap: any, cb: any) {
+        renameDeps(copyProjectsInMap, pkgJSONPth, cb);
       },
 
-      runLocalTests: function (renamePackagesToAbsolute: any, cb: Function) {
+      runNpmInstall: function (renamePackagesToAbsolute: any, cb: any) {
+        const k = cp.spawn('bash');
+        const cmd = `npm install --silent;`;
+        log.info('now running the following command:',chalk.green(cmd));
+        k.stdin.end(cmd);
+        k.stderr.pipe(process.stderr);
+        k.once('exit', cb);
+      },
+
+      runLocalTests: function (runNpmInstall: any, cb: Function) {
 
         log.info(chalk.magentaBright('now running local tests'));
-
-        fs.readFile(pkgJSONPth, function (err, data) {
-
-          if (err) {
-            return cb(err);
-          }
-
-          log.info(chalk.bold('here is updated the package.json file:'), String(data));
-          cb(null);
-
-        });
+        process.nextTick(cb);
 
       },
 
