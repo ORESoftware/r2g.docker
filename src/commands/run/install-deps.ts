@@ -18,7 +18,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
 
       if (!createProjectMap[dep]) {
         log.info('dependency is not in the local map:', dep);
-        return process.nextTick(cb);
+        return process.nextTick(cb, null);
       }
 
       const d = createProjectMap[dep];
@@ -69,7 +69,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       const k = cp.spawn('bash');
 
       const getMap = function () {
-        return results.map(function (v) {
+        return results.filter(Boolean).map(function (v) {
           return `"${v.dest}/${v.basename}"`
         })
         .join(' ');
