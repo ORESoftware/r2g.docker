@@ -43,7 +43,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
       },
 
       checkIfDockerfileExists: function (cb: any) {
-        fs.stat(dockerfileDest, function (err, stats) {
+        fs.lstat(dockerfileDest, function (err, stats) {
           cb(null, stats);
         });
       },

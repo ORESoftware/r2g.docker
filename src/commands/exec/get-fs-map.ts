@@ -25,10 +25,15 @@ export const getFSMap = function (searchRoot: string, packages: Packages, cb: Fu
 
         item = path.resolve(dir + '/' + item);
 
-        fs.stat(item, function (err, stats) {
+        fs.lstat(item, function (err, stats) {
 
           if (err) {
             log.warn(err.message);
+            return cb(null);
+          }
+
+          if(stats.isSymbolicLink()){
+            log.warn('looks like a symbolic link:', item);
             return cb(null);
           }
 

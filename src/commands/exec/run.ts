@@ -69,7 +69,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
   }
 
   try {
-    assert(fs.statSync(searchRoot).isDirectory());
+    assert(fs.lstatSync(searchRoot).isDirectory());
   }
   catch (err) {
     log.error('Your "searchRoot" property does not seem to exist as a directory on the local/host filesystem.');
