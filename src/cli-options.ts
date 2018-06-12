@@ -1,7 +1,7 @@
 'use strict';
 
 export default [
-  
+
   {
     name: 'version',
     type: 'bool',
@@ -13,9 +13,9 @@ export default [
     help: 'Print this help and exit.'
   },
   {
-    names: ['verbose', 'v'],
-    type: 'arrayOfBool',
-    help: 'Verbose output. Use multiple times for more verbose.'
+    names: ['verbosity', 'v'],
+    type: 'integer',
+    help: 'Verbosity level, 1-3 inclusive.'
   },
   {
     names: ['init',],

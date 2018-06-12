@@ -14,7 +14,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
 
   const finalMap = {} as any;
 
-  async.eachSeries(dependenciesToInstall, function (dep, cb) {
+  async.mapLimit(dependenciesToInstall, 3, function (dep, cb) {
 
       if (!createProjectMap[dep]) {
         log.info('dependency is not in the local map:', dep);
@@ -30,12 +30,11 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       const basename = path.basename(c);
       finalMap[dep] = path.resolve(dest + '/' + basename);
 
-
       const cmd = [
         `set -e`,
         `mkdir -p "${dest}"`,
         `rsync -r --exclude="node_modules" "${c}" "${dest}"`,
-        `npm install --loglevel=warn "${dest}/${basename}";`
+        // `npm install --loglevel=warn "${dest}/${basename}";`
       ]
       .join('; ');
 
@@ -47,7 +46,10 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       k.once('exit', function (code) {
 
         if (code < 1) {
-          return cb(null);
+          return cb(null, {
+            dest,
+            basename
+          });
         }
 
         log.error('The following command failed:');
@@ -58,7 +60,37 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
 
     },
 
-    function (err) {
-      cb(err, finalMap);
+    function (err, results: Array<any>) {
+
+      if (err) {
+        return cb(err);
+      }
+
+      const k = cp.spawn('bash');
+
+      const getMap = function () {
+        return results.map(function (v) {
+          return `"${v.dest}/${v.basename}"`
+        })
+        .join(' ');
+      };
+
+      const cmd = `npm install --loglevel=warn ${getMap()} `;
+      log.info('now running the following command:', chalk.green.bold(cmd));
+      k.stdin.end(cmd);
+
+      k.stderr.pipe(process.stderr);
+
+      k.once('exit', function (code) {
+
+        if (code < 1) {
+          cb(null, finalMap);
+        }
+        else {
+          cb(new Error('npm install process exitted with code greater than 0.'));
+        }
+
+      });
+
     });
 };

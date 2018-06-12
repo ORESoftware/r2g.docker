@@ -105,7 +105,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
   Object.keys(packages).forEach(function (k) {
     if (!allDeps[k]) {
       log.warn(chalk.gray('You have the following packages key in your .docker.r2g/config.js file:'), chalk.magentaBright(k));
-      log.warn(chalk.bold('But the above key is not present as a dependency in your package.json file.'));
+      log.warn(chalk.bold(`But "${chalk.magentaBright(k)}" is not present as a dependency in your package.json file.`));
     }
   });
 
@@ -120,7 +120,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
   async.autoInject({
 
       getMap: function (cb: Function) {
-        getFSMap(searchRoot, packages, cb);
+        getFSMap(opts, searchRoot, packages, cb);
       },
 
       launchTool: function (getMap: any, cb: Function) {
