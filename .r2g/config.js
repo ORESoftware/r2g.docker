@@ -16,7 +16,9 @@ exports.default = {
   // npm install /r2g_shared_dir/Users/you/
 
   packages: {
-    residence: true
+    'residence': true,
+    'prepend-transform': true,
+    'clean-trace': true
   }
 
 };

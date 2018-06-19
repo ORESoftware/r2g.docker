@@ -45,7 +45,11 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
     );
   }
 
-  pkgName = String(pkgName).replace(/[^0-9a-z]/gi, '');
+  pkgName = String(pkgName).replace(/[^0-9a-z]/gi, '_');
+
+  if(pkgName.startsWith('_')){
+    pkgName = pkgName.slice(1);
+  }
 
   try {
     docker2gConf = require(projectRoot + '/.r2g/config.js');

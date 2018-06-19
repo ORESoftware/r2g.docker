@@ -15,7 +15,7 @@ name="$docker_r2g_package_name"  # your project's package.json name field
 base_image="node:$r2g_node_version"
 
 
-container="docker_r2g_$name";
+container="docker_r2g.$name";
 docker stop "$container" || echo "no container with name $container running."
 docker rm "$container" || echo "no container with name $container could be removed."
 
