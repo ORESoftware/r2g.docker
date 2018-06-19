@@ -46,26 +46,26 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
   pkgName = String(pkgName).replace(/[^0-9a-z]/gi, '');
 
   try {
-    docker2gConf = require(projectRoot + '/.docker.r2g/config.js');
+    docker2gConf = require(projectRoot + '/.r2g/config.js');
     docker2gConf = docker2gConf.default || docker2gConf;
     packages = docker2gConf.packages;
     searchRoot = path.resolve(docker2gConf.searchRoot);
   }
   catch (err) {
-    log.error(chalk.magentaBright('Could not read your .docker.r2g/config.js file.'));
+    log.error(chalk.magentaBright('Could not read your .r2g/config.js file.'));
     throw getCleanTrace(err);
   }
 
   if (!(packages && typeof packages === 'object')) {
-    throw new Error('You need a property called "packages" in your .docker.r2g/config.js file.');
+    throw new Error('You need a property called "packages" in your .r2g/config.js file.');
   }
 
   if (!(searchRoot && typeof searchRoot === 'string')) {
-    throw new Error('You need a property called "searchRoot" in your .docker.r2g/config.js file.');
+    throw new Error('You need a property called "searchRoot" in your .r2g/config.js file.');
   }
 
   if (!path.isAbsolute(searchRoot)) {
-    throw new Error('Your "searchRoot" property in your .docker.r2g/config.js file, needs to be an absolute path.');
+    throw new Error('Your "searchRoot" property in your .r2g/config.js file, needs to be an absolute path.');
   }
 
   try {
@@ -104,7 +104,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
 
   Object.keys(packages).forEach(function (k) {
     if (!allDeps[k]) {
-      log.warn(chalk.gray('You have the following packages key in your .docker.r2g/config.js file:'), chalk.magentaBright(k));
+      log.warn(chalk.gray('You have the following packages key in your .r2g/config.js file:'), chalk.magentaBright(k));
       log.warn(chalk.bold(`But "${chalk.magentaBright(k)}" is not present as a dependency in your package.json file.`));
     }
   });
@@ -146,7 +146,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
         k.stdout.pipe(pt(chalk.blueBright('[docker.r2g]  '))).pipe(process.stdout);
         k.stderr.pipe(pt(chalk.magenta('[docker.r2g]  '))).pipe(process.stderr);
 
-        k.stdin.end(`./.docker.r2g/exec.sh`);
+        k.stdin.end(`./.r2g/exec.sh`);
         k.once('exit', function (code) {
           cb(null, {exitCode: code});
         });

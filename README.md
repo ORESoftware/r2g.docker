@@ -4,12 +4,12 @@
 
 
 ```bash
-docker.r2g --init
+r2g init
 
 ```
 
-1. mkdir .docker.r2g
-2. write .docker.r2g/run.sh
-3. write .docker.r2g/config.json
+1. mkdir .r2g
+2. write .r2g/run.sh
+3. write .r2g/config.json
 
 

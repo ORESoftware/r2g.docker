@@ -97,5 +97,5 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
 
          });*/
     });
-  
+
 };

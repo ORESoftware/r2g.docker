@@ -30,12 +30,12 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
   }
 
   try {
-    docker2gConf = require(projectRoot + '/.docker.r2g/config.js');
+    docker2gConf = require(projectRoot + '/.r2g/config.js');
     docker2gConf = docker2gConf.default || docker2gConf;
     packages = docker2gConf.packages;
   }
   catch (err) {
-    log.error(chalk.magentaBright('Could not read your .docker.r2g/config.js file.'));
+    log.error(chalk.magentaBright('Could not read your .r2g/config.js file.'));
     throw getCleanTrace(err);
   }
 
