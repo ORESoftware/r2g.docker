@@ -27,3 +27,7 @@ docker run \
     -e docker_r2g_fs_map="$map" \
     -e MY_DOCKER_R2G_SEARCH_ROOT="/dev/null" \
     --name "$container" "$tag"
+
+
+## to debug:
+# docker run -it be12509dc3f2 /bin/bash

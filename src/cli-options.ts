@@ -18,28 +18,14 @@ export default [
     help: 'Verbosity level, 1-3 inclusive.'
   },
   {
-    names: ['init',],
+    names: ['pack'],
     type: 'bool',
-    help: 'Initialize docker.r2g in your project',
-    helpArg: 'FILE'
+    help: 'Run `npm pack` against all local dependencies before installing them.'
   },
   {
-    names: ['run',],
+    names: ['allow-unknown'],
     type: 'bool',
-    help: 'Run docker.r2g against your project',
-    helpArg: 'FILE'
-  },
-  {
-    names: ['exec',],
-    type: 'bool',
-    help: 'Run docker.r2g against your project',
-    helpArg: 'FILE'
-  },
-  {
-    names: ['file', 'f'],
-    type: 'string',
-    help: 'File to process',
-    helpArg: 'FILE'
+    help: 'Allow unknown/unrecognized options to be passed to the command line.'
   }
 
 ]

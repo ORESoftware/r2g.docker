@@ -11,14 +11,19 @@ commands="$basic_path/dist/commands"
 cmd="$1";
 shift 1;
 
+MY_ARGS=("$@")
+export dkr2g_run_args="${MY_ARGS[@]}";
+
+
 if [ "$cmd" == "init" ]; then
-  node "$commands/init" "$@"
+  node "$commands/init" $@
 
 elif [ "$cmd" == "exec" ]; then
-  node "$commands/exec" "$@"
+
+  node "$commands/exec" $@
 
 elif [ "$cmd" == "run" ]; then
-  node "$commands/run" "$@"
+  node "$commands/run" $@
 
 else
 

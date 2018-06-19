@@ -12,6 +12,9 @@ map="$docker_r2g_fs_map"
 search_root="$docker_r2g_search_root"
 shared="$docker_r2g_shared_dir";
 name="$docker_r2g_package_name"  # your project's package.json name field
+run_args="$dkr2g_run_args";
+
+echo "THE RUN ARGS are => $run_args";
 
 container="docker_r2g_$name";
 docker stop "$container" || echo "no container with name $container running."
@@ -25,5 +28,21 @@ docker build -f Dockerfile.r2g -t "$tag" --build-arg CACHEBUST="$(date +%s)" .
 docker run \
     -v "$search_root:$shared:ro"  \
     -e docker_r2g_fs_map="$map" \
+    -e dkr2g_run_args="$run_args" \
     -e MY_DOCKER_R2G_SEARCH_ROOT="/dev/null" \
     --name "$container" "$tag"
+
+
+
+#docker run \
+#    -v "$search_root:$shared:ro"  \
+#    -e docker_r2g_fs_map="$map" \
+#    -e MY_DOCKER_R2G_SEARCH_ROOT="/dev/null" \
+#    --entrypoint "dkr2g" \
+#    --name "$container" "$tag" \
+#      run --pack
+
+
+
+## to debug:
+# docker run -it be12509dc3f2 /bin/bash

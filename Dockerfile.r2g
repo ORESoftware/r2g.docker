@@ -6,7 +6,10 @@ RUN sudo apt-get -y update
 RUN apt-get install -y netcat
 RUN apt-get install -y rsync
 
+ENV FORCE_COLOR=1
 ENV docker_r2g_in_container=yes
+ENV MY_DOCKER_R2G_SEARCH_ROOT="/home/node"
+
 RUN sudo echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER node
@@ -25,18 +28,21 @@ RUN sudo chown -R $(whoami) $(npm config get prefix)/share
 RUN sudo chown -R $(whoami) /usr/local/lib
 RUN sudo chown -R $(whoami) /usr/local/etc
 
+RUN npm set loglevel=warn
+RUN npm set unsafe-perm=true
 RUN npm set cache-min 9999999
 RUN npm set progress=false
 
 
-RUN npm install --loglevel=warn -g \
- "https://raw.githubusercontent.com/oresoftware/tarballs/master/tgz/oresoftware/npm.cache.tgz?$(date +%s)"
-
-COPY package.json .
-COPY .r2g .r2g
-RUN update_npm_cache
-
 ARG CACHEBUST=1
+
+# RUN npm install --loglevel=warn -g \
+#  "https://raw.githubusercontent.com/oresoftware/tarballs/master/tgz/oresoftware/npm.cache.tgz?$(date +%s)"
+#
+# COPY package.json .
+# COPY .r2g .r2g
+# RUN update_npm_cache
+
 
 RUN npm install --loglevel=warn -g \
  "https://raw.githubusercontent.com/oresoftware/tarballs/master/tgz/oresoftware/read.json.tgz?$(date +%s)"
@@ -50,10 +56,10 @@ RUN sudo chmod -R 777  /home/node
 
 ENV PATH="./node_modules/.bin:${PATH}"
 
-RUN npm link -f
+RUN npm link
 
 #ENTRYPOINT ["/home/node/app/assets/cli.sh", "run"]
-ENTRYPOINT ["dkr2g", "run"]
+ENTRYPOINT dkr2g run --allow-unknown "$dkr2g_run_args"
 
 
 

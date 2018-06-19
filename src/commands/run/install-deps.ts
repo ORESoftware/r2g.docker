@@ -10,7 +10,7 @@ import shortid = require("shortid");
 
 /////////////////////////////////////////////////////////////////
 
-export const installDeps = function (createProjectMap: any, dependenciesToInstall: Array<string>, cb: any) {
+export const installDeps = function (createProjectMap: any, dependenciesToInstall: Array<string>, opts: any, cb: any) {
 
   const finalMap = {} as any;
 
@@ -32,7 +32,48 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       const id = shortid.generate();
       const dest = path.resolve(`${process.env.HOME}/.docker_r2g_cache/${id}`);
       const basename = path.basename(c);
-      finalMap[dep] = path.resolve(dest + '/' + basename);
+      const depRoot = path.resolve(dest + '/' + basename);
+
+
+      const pack = function(depRoot: string, cb: any){
+
+        if(!opts.pack){
+          // the map just points to the root of the project
+          finalMap[dep] = depRoot;
+          return process.nextTick(cb);
+        }
+
+        const k = cp.spawn('bash', [], {
+          cwd: depRoot
+        });
+
+        const cmd = [
+          `npm pack --loglevel=warn`,
+        ]
+        .join('; ');
+
+
+        log.info(`Running the following command: '${chalk.cyan.bold(cmd)}', in this directory: "${depRoot}".`);
+
+        let stdout = '';
+
+        k.stdout.on('data', function (d) {
+          stdout+= String(d).trim();
+        });
+        k.stdin.end(cmd + '\n');
+        k.stderr.pipe(process.stderr);
+        k.once('exit', function (code) {
+
+          if(code > 0){
+            return cb(new Error('"npm pack" command exited with code greater than 0.'));
+          }
+
+          // the map points to the .tgz file in the root of the project, where stdout should be the .tgz file name
+          finalMap[dep] = path.resolve(dest + '/' + basename + '/' + stdout);
+          cb(null);
+
+        });
+      };
 
       const cmd = [
         `set -e`,
@@ -50,7 +91,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       k.once('exit', function (code) {
 
         if (code < 1) {
-          return cb(null);
+          return pack(depRoot, cb);
         }
 
         log.error('The following command failed:');

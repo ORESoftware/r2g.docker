@@ -1,15 +1,19 @@
+'use strict';
+
+import chalk from 'chalk';
 import options from './cli-options';
 const dashdash = require('dashdash');
 import residence = require('residence');
 
-const parser = dashdash.createParser({options});
+const allowUnknown = process.argv.indexOf('--allow-unknown') > 0;
+const parser = dashdash.createParser({options, allowUnknown});
 
 let opts: any;
 
 try {
   opts = parser.parse(process.argv);
 } catch (e) {
-  console.error('foo: error: %s', e.message);
+  console.error(chalk.bold('r2g:'),'command-line arguments parsing error:', chalk.magentaBright(e.message));
   process.exit(1);
 }
 

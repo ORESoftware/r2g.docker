@@ -56,7 +56,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
   async.autoInject({
 
       copyProjectsInMap: function (cb: any) {
-        installDeps(fsMap, dependenciesToInstall, cb);
+        installDeps(fsMap, dependenciesToInstall, opts, cb);
       },
 
       renamePackagesToAbsolute: function (copyProjectsInMap: any, cb: any) {
