@@ -12,6 +12,7 @@ map="$docker_r2g_fs_map"
 search_root="$docker_r2g_search_root"
 shared="$docker_r2g_shared_dir";
 name="$docker_r2g_package_name"  # your project's package.json name field
+base_image="node:$r2g_node_version"
 
 
 container="docker_r2g_$name";
@@ -35,7 +36,7 @@ zmx(){
 }
 
 
-docker build -f Dockerfile.r2g -t "$tag" --build-arg CACHEBUST="$(date +%s)" .
+docker build -f Dockerfile.r2g -t "$tag" --build-arg r2g_base_image="$base_image" --build-arg CACHEBUST="$(date +%s)" .
 
 #docker run \
 #    -v "$search_root:$shared:ro"  \
@@ -48,6 +49,7 @@ docker build -f Dockerfile.r2g -t "$tag" --build-arg CACHEBUST="$(date +%s)" .
 docker run \
     -v "$search_root:$shared:ro"  \
     -e docker_r2g_fs_map="$map" \
+    -e r2g_container_id="$container" \
     -e MY_DOCKER_R2G_SEARCH_ROOT="/dev/null" \
     --entrypoint "dkr2g" \
     --name "$container" "$tag" \

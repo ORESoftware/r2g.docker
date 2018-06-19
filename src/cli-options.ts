@@ -33,6 +33,11 @@ export default [
     help: 'Run `npm pack` against all local dependencies before installing them.'
   },
   {
+    names: ['forever'],
+    type: 'bool',
+    help: 'Run `npm pack` against all local dependencies before installing them.'
+  },
+  {
     names: ['allow-unknown'],
     type: 'bool',
     help: 'Allow unknown/unrecognized options to be passed to the command line.'

@@ -149,7 +149,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
         const map = JSON.stringify(mapped);
 
-        console.log('the argv:', argv);
+        log.info('argv for dkr2g exec/run:', argv);
 
         const k = cp.spawn('./.r2g/exec.sh', argv, {
           cwd: projectRoot,

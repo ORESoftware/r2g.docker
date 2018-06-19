@@ -16,8 +16,6 @@ import {ErrorValueCallback} from "../../index";
 
 ///////////////////////////////////////////////
 
-
-
 export const run = function (cwd: string, projectRoot: string, opts: any, argv: Array<string>) {
 
   let pkgJSON = null, docker2gConf = null, packages = null, fsMap: any = null;
@@ -74,7 +72,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
         const k = cp.spawn('bash');
         const cmd = `npm install --loglevel=warn;`;
-        log.info('now running the following command:',chalk.green(cmd));
+        log.info('now running the following command:', chalk.green(cmd));
         k.stdin.end(cmd);
         k.stderr.pipe(process.stderr);
         k.once('exit', cb);
@@ -110,14 +108,38 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
     function (err: any, results) {
 
+      let exitCode = 0;
+
       if (err && err.OK === true) {
         log.info('Successfully run this baby, with a warning:', util.inspect(err, {breakLength: Infinity}));
       }
       else if (err) {
-        throw getCleanTrace(err);
+        exitCode = 1;
+        log.error(getCleanTrace(err));
+      }
+      else {
+        log.info('Successfully ran docker.r2g');
       }
 
-      log.info('Successfully ran docker.r2g')
+      if (opts.forever) {
+
+        process.once('SIGINT', function () {
+          log.info('SIGINT captured.');
+          process.exit(1);
+        });
+
+        log.info('docker.r2g run routine is waiting for exit signal from the user. The container id is:', chalk.bold(process.env.r2g_container_id));
+        log.info('to inspect the container, use:', chalk.bold(`docker exec -it ${process.env.r2g_container_id} /bin/bash`));
+        log.info('to stop/kill the container, use kill, not stop:', chalk.bold(`docker kill ${process.env.r2g_container_id}`));
+
+        setInterval(() => {
+        }, 150000);
+      }
+      else {
+
+        // ensure exit occurs
+        process.exit(exitCode);
+      }
 
     });
 
