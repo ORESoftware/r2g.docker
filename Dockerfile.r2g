@@ -1,6 +1,6 @@
 
-ARG r2g_base_image="node:10"
-FROM $r2g_base_image
+ARG base_image
+FROM $base_image
 
 #FROM node:10
 

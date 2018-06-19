@@ -138,7 +138,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
       launchTool (getMap: any, checkIfExecFileExists: any, cb: ErrorValueCallback) {
 
         if(checkIfExecFileExists){
-          return process.nextTick(cb, new Error('Looks like the needed .r2g/exec.sh file does not exist in your project.'));
+          return process.nextTick(cb, new Error('Looks like the needed ".r2g/exec.sh" file does not exist in your project.'));
         }
 
         const ln = searchRoot.length;
@@ -157,12 +157,13 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
             docker_r2g_package_name: pkgName,
             docker_r2g_search_root: searchRoot,
             docker_r2g_fs_map: map,
-            docker_r2g_shared_dir: r2g_shared_dir
+            docker_r2g_shared_dir: r2g_shared_dir,
+            r2g_node_version: opts.node_version
           })
         });
 
-        k.stdout.pipe(pt(chalk.blueBright('[docker.r2g]  '))).pipe(process.stdout);
-        k.stderr.pipe(pt(chalk.magenta('[docker.r2g]  '))).pipe(process.stderr);
+        k.stdout.pipe(pt(chalk.blueBright('[r2g/docker] '))).pipe(process.stdout);
+        k.stderr.pipe(pt(chalk.magenta('[r2g/docker] '))).pipe(process.stderr);
 
         // k.stdin.end(`./.r2g/exec.sh`);
         k.stdin.end();

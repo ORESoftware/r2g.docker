@@ -36,7 +36,7 @@ zmx(){
 }
 
 
-docker build -f Dockerfile.r2g -t "$tag" --build-arg r2g_base_image="$base_image" --build-arg CACHEBUST="$(date +%s)" .
+docker build -f Dockerfile.r2g -t "$tag" --build-arg base_image="$base_image" --build-arg CACHEBUST="$(date +%s)" .
 
 #docker run \
 #    -v "$search_root:$shared:ro"  \
