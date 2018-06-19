@@ -12,10 +12,13 @@ import {renameDeps} from './rename-file-deps';
 import * as util from "util";
 import chalk from "chalk";
 import * as fs from "fs";
+import {ErrorValueCallback} from "../../index";
 
 ///////////////////////////////////////////////
 
-export const run = function (cwd: string, projectRoot: string, opts: any) {
+
+
+export const run = function (cwd: string, projectRoot: string, opts: any, argv: Array<string>) {
 
   let pkgJSON = null, docker2gConf = null, packages = null, fsMap: any = null;
 
@@ -55,37 +58,52 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
 
   async.autoInject({
 
-      copyProjectsInMap: function (cb: any) {
+      copyProjectsInMap: function (cb: ErrorValueCallback) {
         installDeps(fsMap, dependenciesToInstall, opts, cb);
       },
 
-      renamePackagesToAbsolute: function (copyProjectsInMap: any, cb: any) {
+      renamePackagesToAbsolute: function (copyProjectsInMap: any, cb: ErrorValueCallback) {
         renameDeps(copyProjectsInMap, pkgJSONPth, cb);
       },
 
-      runNpmInstall: function (renamePackagesToAbsolute: any, cb: any) {
+      runNpmInstall: function (renamePackagesToAbsolute: any, cb: ErrorValueCallback) {
+
+        // const k = cp.spawn('bash', [], {
+        //   cwd: projectRoot
+        // });
+
         const k = cp.spawn('bash');
-        const cmd = `npm install --silent;`;
+        const cmd = `npm install --loglevel=warn;`;
         log.info('now running the following command:',chalk.green(cmd));
         k.stdin.end(cmd);
         k.stderr.pipe(process.stderr);
         k.once('exit', cb);
       },
 
-      runLocalTests: function (runNpmInstall: any, cb: Function) {
+      runLocalTests: function (runNpmInstall: any, cb: ErrorValueCallback) {
 
         log.info(chalk.magentaBright('now running local tests'));
         process.nextTick(cb);
 
       },
 
-      r2g: function (runLocalTests: any, cb: Function) {
+      r2g: function (runLocalTests: any, cb: ErrorValueCallback) {
+
         log.info('running r2g tests');
-        const k = cp.spawn('bash');
-        k.stdin.end('r2g run;');
+
+        // const k = cp.spawn('bash', argv, {
+        //   cwd: projectRoot
+        // });
+
+        const k = cp.spawn('r2g', ['run'].concat(argv), {
+          cwd: projectRoot
+        });
+
+        k.stdin.end();
+        // k.stdin.end('r2g run;');
         k.stdout.pipe(process.stdout);
         k.stderr.pipe(process.stderr);
-        k.once('exit', cb as any);
+        k.once('exit', cb);
       }
 
     },

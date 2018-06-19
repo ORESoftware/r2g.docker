@@ -1,4 +1,7 @@
-FROM node:10
+
+ARG NODE_VERSION
+FROM node:NODE_VERSION
+#FROM node:10
 
 RUN apt-get -y update
 RUN apt-get -y install sudo
@@ -59,7 +62,7 @@ ENV PATH="./node_modules/.bin:${PATH}"
 RUN npm link
 
 #ENTRYPOINT ["/home/node/app/assets/cli.sh", "run"]
-ENTRYPOINT dkr2g run --allow-unknown "$dkr2g_run_args"
+#ENTRYPOINT dkr2g run --allow-unknown "${dkr2g_run_args[@]}" # $dkr2g_run_args
 
 
 

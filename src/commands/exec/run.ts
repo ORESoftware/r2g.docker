@@ -13,6 +13,8 @@ import log from '../../logger';
 import * as util from "util";
 import {getFSMap} from "./get-fs-map";
 import * as assert from "assert";
+import {ErrorValueCallback} from "../../index";
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +22,7 @@ export interface Packages {
   [key: string]: boolean | string
 }
 
-export const run = function (cwd: string, projectRoot: string, opts: any) {
+export const run = function (cwd: string, projectRoot: string, opts: any, argv: Array<string>) {
 
   const userHome = path.resolve(process.env.HOME);
 
@@ -119,11 +121,25 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
 
   async.autoInject({
 
-      getMap: function (cb: Function) {
+      getMap (cb: ErrorValueCallback) {
         getFSMap(opts, searchRoot, packages, cb);
       },
 
-      launchTool: function (getMap: any, cb: Function) {
+      checkIfExecFileExists(cb: ErrorValueCallback){
+
+        const f = path.resolve(projectRoot + '/.r2g/exec.sh');
+
+        fs.stat(f, function(err){
+           cb(null, err);
+        });
+
+      },
+
+      launchTool (getMap: any, checkIfExecFileExists: any, cb: ErrorValueCallback) {
+
+        if(checkIfExecFileExists){
+          return process.nextTick(cb, new Error('Looks like the needed .r2g/exec.sh file does not exist in your project.'));
+        }
 
         const ln = searchRoot.length;
 
@@ -133,7 +149,9 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
 
         const map = JSON.stringify(mapped);
 
-        const k = cp.spawn('bash', [], {
+        console.log('the argv:', argv);
+
+        const k = cp.spawn('./.r2g/exec.sh', argv, {
           cwd: projectRoot,
           env: Object.assign({}, process.env, {
             docker_r2g_package_name: pkgName,
@@ -146,7 +164,8 @@ export const run = function (cwd: string, projectRoot: string, opts: any) {
         k.stdout.pipe(pt(chalk.blueBright('[docker.r2g]  '))).pipe(process.stdout);
         k.stderr.pipe(pt(chalk.magenta('[docker.r2g]  '))).pipe(process.stderr);
 
-        k.stdin.end(`./.r2g/exec.sh`);
+        // k.stdin.end(`./.r2g/exec.sh`);
+        k.stdin.end();
         k.once('exit', function (code) {
           cb(null, {exitCode: code});
         });
