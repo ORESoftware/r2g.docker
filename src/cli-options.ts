@@ -10,7 +10,7 @@ export default [
   {
     names: ['help', 'h'],
     type: 'bool',
-    help: 'Print this help and exit.'
+    help: 'Print help menu and exit.'
   },
   {
     names: ['verbosity', 'v'],
@@ -29,6 +29,16 @@ export default [
     help: 'The npm version to use (the Docker image/container will use this npm version).'
   },
   {
+    names: ['root'],
+    type: 'bool',
+    help: 'Run the Docker container as the root user.'
+  },
+  {
+    names: ['full'],
+    type: 'bool',
+    help: 'Install local copies of dependencies (very useful).'
+  },
+  {
     names: ['pack'],
     type: 'bool',
     help: 'Run `npm pack` against all local dependencies before installing them.'
@@ -36,7 +46,7 @@ export default [
   {
     names: ['forever'],
     type: 'bool',
-    help: 'Run `npm pack` against all local dependencies before installing them.'
+    help: 'Keep docker container alive (so user can debug container, etc).'
   },
   {
     names: ['allow-unknown'],

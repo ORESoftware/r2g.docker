@@ -2,13 +2,8 @@
 ARG base_image
 FROM $base_image
 
-#FROM node:10
-
-RUN apt-get -y update
-RUN apt-get -y install sudo
-RUN sudo apt-get -y update
-RUN apt-get install -y netcat
-RUN apt-get install -y rsync
+ENV ores_bash_utils https://raw.githubusercontent.com/oresoftware/npm.bash.utils
+RUN  curl -sS -o- $ores_bash_utils/master/assets/install-basics.sh | bash
 
 ENV FORCE_COLOR=1
 ENV docker_r2g_in_container=yes
@@ -25,17 +20,8 @@ WORKDIR /home/node/app
 
 RUN sudo chmod -R 777  /home/node
 
-RUN sudo chown -R $(whoami) $(npm config get prefix)/lib
-RUN sudo chown -R $(whoami) $(npm config get prefix)/lib/node_modules
-RUN sudo chown -R $(whoami) $(npm config get prefix)/bin
-RUN sudo chown -R $(whoami) $(npm config get prefix)/share
-RUN sudo chown -R $(whoami) /usr/local/lib
-RUN sudo chown -R $(whoami) /usr/local/etc
-
-RUN npm set loglevel=warn
-RUN npm set unsafe-perm=true
-RUN npm set cache-min 9999999
-RUN npm set progress=false
+RUN  curl -sS -o- $ores_bash_utils/master/assets/run-non-root-chown.sh | bash
+RUN  curl -sS -o- $ores_bash_utils/master/assets/run-npm-config-settings.sh | bash
 
 
 ARG CACHEBUST=1
