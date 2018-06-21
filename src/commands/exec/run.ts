@@ -79,7 +79,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
   }
   catch (err) {
     log.error('Your "searchRoot" property does not seem to exist as a directory on the local/host filesystem.');
-    log.error('A.K.A., the following path does not seem to be a directory:');
+    log.error('In other words, the following path does not seem to be a directory:');
     log.error(searchRoot);
     throw getCleanTrace(err);
   }

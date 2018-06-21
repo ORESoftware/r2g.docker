@@ -50,7 +50,6 @@ docker run \
     -v "$search_root:$shared:ro"  \
     -e docker_r2g_fs_map="$map" \
     -e r2g_container_id="$container" \
-    -e MY_DOCKER_R2G_SEARCH_ROOT="/dev/null" \
     --entrypoint "dkr2g" \
     --name "$container" "$tag" \
       run --allow-unknown $@

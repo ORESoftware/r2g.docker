@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+export r2g_is_docker="yes";
 
 dir_name="$(dirname "$0")"
 read_link="$(readlink "$0")";
@@ -11,10 +12,6 @@ commands="$basic_path/dist/commands"
 cmd="$1";
 shift 1;
 
-#MY_ARGS=("$@")
-#export dkr2g_run_args="${MY_ARGS[@]}";
-#export dkr2g_run_args=("${MY_ARGS[@]}");
-
 
 if [ "$cmd" == "init" ]; then
   node "$commands/init" $@
@@ -23,6 +20,7 @@ elif [ "$cmd" == "exec" ]; then
   node "$commands/exec" $@
 
 elif [ "$cmd" == "run" ]; then
+
   node "$commands/run" $@
 
 else
