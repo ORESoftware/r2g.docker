@@ -12,6 +12,10 @@ commands="$basic_path/dist/commands"
 cmd="$1";
 shift 1;
 
+if [ -z "$(which docker)" ]; then
+  echo >&2 "docker does not appear to be installed on your system (the docker executable cannot be found using 'which').";
+fi
+
 
 if [ "$cmd" == "init" ]; then
   node "$commands/init" $@
