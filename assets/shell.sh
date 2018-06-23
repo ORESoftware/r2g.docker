@@ -1,28 +1,19 @@
 #!/usr/bin/env bash
 
 
-docker.r2g(){
-  dkr2g "$@"
-}
-
-docker_r2g(){
-  dkr2g "$@"
-}
-
 dkr2g(){
 
-  local whch="$(command -v dkr2g)"
-
-  if [ -z "$whch" ]; then
-       npm install -g --loglevel=warn "@oresoftware/docker.r2g"  || {
+  if [[ -z $(command -v dkr2g) ]] || [[ -z $(which dkr2g) ]]; then
+       npm install -g --silent '@oresoftware/docker.r2g'  || {
+          echo -e "Could not install the '@oresoftware/r2g' NPM package globally." >&2;
+          echo -e "Check your user permissions to install global NPM packages." >&2;
           return 1;
       }
   fi
 
-  command dkr2g "$@"
+  command dkr2g $@
 }
 
 
 export -f dkr2g;
-export -f docker.r2g;
-export -f docker_r2g;
+

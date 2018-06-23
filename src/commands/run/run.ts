@@ -66,12 +66,12 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
       runNpmInstall: function (renamePackagesToAbsolute: any, cb: ErrorValueCallback) {
 
-        const k = cp.spawn('bash', [], {
+        const k = cp.spawn('bash', [] as ReadonlyArray<string>, {
           cwd: projectRoot
         });
 
         const cmd = `npm install --production --loglevel=warn;`;
-        log.info('now running the following command:', chalk.green(cmd));
+        log.info('Now running:', chalk.green(cmd));
         k.stdin.end(cmd);
         k.stderr.pipe(process.stderr);
         k.once('exit', cb);
@@ -92,7 +92,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
         //   cwd: projectRoot
         // });
 
-        const k = cp.spawn('r2g', ['run'].concat(argv), {
+        const k = cp.spawn('r2g', ['run'].concat(argv) as ReadonlyArray<string>, {
           cwd: projectRoot
         });
 

@@ -53,7 +53,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
         .join('; ');
 
 
-        log.info(`Running the following command: '${chalk.cyan.bold(cmd)}', in this directory: "${depRoot}".`);
+        log.info(`Now running: '${chalk.cyan.bold(cmd)}', in this directory: "${depRoot}".`);
 
         let stdout = '';
 
@@ -83,7 +83,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       ]
       .join('; ');
 
-      log.info(`About to run the following command: '${chalk.cyan.bold(cmd)}'`);
+      log.info(`Now running: '${chalk.cyan.bold(cmd)}'`);
 
       k.stdin.end(cmd + '\n');
       k.stderr.pipe(process.stderr);

@@ -26,7 +26,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
   const userHome = path.resolve(process.env.HOME);
 
-  let pkgJSON = null, docker2gConf = null, packages: Packages = null, searchRoot = '', pkgName = '';
+  let pkgJSON : any = null, docker2gConf = null, packages: Packages = null, searchRoot = '', pkgName = '';
 
   const pkgJSONPth = path.resolve(projectRoot + '/package.json');
 
@@ -155,7 +155,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
         log.info('argv for dkr2g exec/run:', argv);
 
-        const k = cp.spawn('./.r2g/exec.sh', argv, {
+        const k = cp.spawn('./.r2g/exec.sh', argv as ReadonlyArray<string>, {
           cwd: projectRoot,
           env: Object.assign({}, process.env, {
             docker_r2g_package_name: pkgName,
