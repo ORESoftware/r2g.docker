@@ -9,6 +9,13 @@ import ProcessEnv = NodeJS.ProcessEnv;
 
 declare global {
 
+  // declare namespace NodeJS {
+  //   export interface EnvironmentVariables {
+  //     r2g_container_id: string,
+  //     docker_r2g_is_debug: string
+  //   }
+  // }
+
   namespace NodeJS {
 
     export interface ProcessEnv  {
@@ -18,8 +25,7 @@ declare global {
       docker_r2g_fs_map: string
       HOME: string
     }
-
-
+    
     // export interface Global {
     //    process: {
     //      env: MyProcessEnv
