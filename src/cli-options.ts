@@ -18,13 +18,13 @@ export default [
     help: 'Verbosity level, 1-3 inclusive.'
   },
   {
-    names: ['node-version', 'nodev', 'node.v'],
+    names: ['node-version', 'nodev'],
     type: 'string',
     help: 'The node version to use (the Docker image/container will use this node version).',
     default: "10"
   },
   {
-    names: ['npm-version', 'npmv', 'npm.v'],
+    names: ['npm-version', 'npmv'],
     type: 'string',
     help: 'The npm version to use (the Docker image/container will use this npm version).'
   },
