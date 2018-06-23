@@ -67,6 +67,6 @@ dkr2g exec --node-version="9.5" --npm-version="5.4"
 ```
 
 If `--node-version` is used, the Docker container will use that Node version. `--nodev` is an alias for --node-version. <br>
-If `--npm-version` is used, the Docker container will use that NPM version.  `--npmv` is an alias for --npm-versions. <br>
+If `--npm-version` is used, the Docker container will use that NPM version.  `--npmv` is an alias for --npm-version. <br>
 
 
