@@ -25,7 +25,7 @@ declare global {
       docker_r2g_fs_map: string
       HOME: string
     }
-    
+
     // export interface Global {
     //    process: {
     //      env: MyProcessEnv

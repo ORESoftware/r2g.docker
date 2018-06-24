@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 
+
 dkr2g(){
 
   if [[ -z $(command -v dkr2g) ]] || [[ -z $(which dkr2g) ]]; then
