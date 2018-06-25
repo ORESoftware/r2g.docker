@@ -24,4 +24,5 @@ dkr2g(){
 
 
 export -f dkr2g;
+export -f get_latest_dkr2g;
 
