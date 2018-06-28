@@ -22,20 +22,18 @@ and r2g will install docker.r2g for you. Note that `r2g docker` is the same as r
 Create the files in your project that are necessary for using .r2g to the fullest:
 
 ```bash
-dkr2g init
+ $ dkr2g init    # the same as `$ r2g init`
 ```
 
-<br>
 
 ## Run / Execute
 
 ```bash
-dkr2g exec
+ $ dkr2g exec    # the same as `$ r2g docker`
 ```
 
-<br>
 
-## Options
+## Command Line Options
 
 By default, dkr2g uses a non-root user for the container, to use the root user, use the --root option:
 
@@ -45,7 +43,7 @@ dkr2g exec --root
 
 <br>
 
-To install local dependencies for complete local development/testing:
+##### To install local dependencies for complete local development/testing:
 
 ```bash
 dkr2g exec --full --pack
@@ -60,7 +58,7 @@ their published format.
 
 <br>
 
-To use different node.js / npm versions:
+##### To use different node.js / npm versions:
 
 ```bash
 dkr2g exec --node-version="9.5" --npm-version="5.4"
@@ -68,5 +66,4 @@ dkr2g exec --node-version="9.5" --npm-version="5.4"
 
 If `--node-version` is used, the Docker container will use that Node version. `--nodev` is an alias for --node-version. <br>
 If `--npm-version` is used, the Docker container will use that NPM version.  `--npmv` is an alias for --npm-version. <br>
-
 

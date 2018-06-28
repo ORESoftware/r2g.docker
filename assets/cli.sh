@@ -55,6 +55,7 @@ elif [ "$cmd" == "exec" ]; then
 
   node "$commands/exec" "$@"
 
+
 elif [ "$cmd" == "run" ]; then
 
   node "$commands/run" "$@"
