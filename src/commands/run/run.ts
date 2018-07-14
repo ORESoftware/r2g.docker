@@ -70,7 +70,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
           cwd: projectRoot
         });
 
-        const cmd = `npm install --production --loglevel=warn;`;
+        const cmd = `sudo npm install --production --loglevel=warn`;
         log.info('Now running:', chalk.green(cmd));
         k.stdin.end(cmd);
         k.stderr.pipe(process.stderr);

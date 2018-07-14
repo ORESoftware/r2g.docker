@@ -46,7 +46,7 @@ RUN sudo chmod -R 777  /home/node
 
 ENV PATH="./node_modules/.bin:${PATH}"
 
-RUN npm link
+RUN npm link -f
 #ENTRYPOINT ["/home/node/app/assets/cli.sh", "run"]
 
 ENTRYPOINT dkr2g run --allow-unknown $dkr2g_run_args
