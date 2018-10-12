@@ -13,7 +13,7 @@ import log from '../../logger';
 import * as util from "util";
 import {getFSMap} from "./get-fs-map";
 import * as assert from "assert";
-import {ErrorValueCallback} from "../../index";
+import {EVCb} from "../../index";
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -125,11 +125,11 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
   async.autoInject({
 
-      getMap (cb: ErrorValueCallback) {
+      getMap (cb: EVCb) {
         getFSMap(opts, searchRoot, packages, cb);
       },
 
-      checkIfExecFileExists(cb: ErrorValueCallback){
+      checkIfExecFileExists(cb: EVCb){
 
         const f = path.resolve(projectRoot + '/.r2g/exec.sh');
 
@@ -139,7 +139,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
       },
 
-      launchTool (getMap: any, checkIfExecFileExists: any, cb: ErrorValueCallback) {
+      launchTool (getMap: any, checkIfExecFileExists: any, cb: EVCb) {
 
         if(checkIfExecFileExists){
           return process.nextTick(cb, new Error('Looks like the needed ".r2g/exec.sh" file does not exist in your project.'));

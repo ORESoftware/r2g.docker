@@ -12,7 +12,7 @@ import {renameDeps} from './rename-file-deps';
 import * as util from "util";
 import chalk from "chalk";
 import * as fs from "fs";
-import {ErrorValueCallback} from "../../index";
+import {EVCb} from "../../index";
 
 ///////////////////////////////////////////////
 
@@ -56,15 +56,15 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
   async.autoInject({
 
-      copyProjectsInMap: function (cb: ErrorValueCallback) {
+      copyProjectsInMap: function (cb: EVCb) {
         installDeps(fsMap, dependenciesToInstall, opts, cb);
       },
 
-      renamePackagesToAbsolute: function (copyProjectsInMap: any, cb: ErrorValueCallback) {
+      renamePackagesToAbsolute: function (copyProjectsInMap: any, cb: EVCb) {
         renameDeps(copyProjectsInMap, pkgJSONPth, cb);
       },
 
-      runNpmInstall: function (renamePackagesToAbsolute: any, cb: ErrorValueCallback) {
+      runNpmInstall: function (renamePackagesToAbsolute: any, cb: EVCb) {
 
         const k = cp.spawn('bash', [] as ReadonlyArray<string>, {
           cwd: projectRoot
@@ -77,14 +77,14 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
         k.once('exit', cb);
       },
 
-      runLocalTests: function (runNpmInstall: any, cb: ErrorValueCallback) {
+      runLocalTests: function (runNpmInstall: any, cb: EVCb) {
 
         log.info(chalk.magentaBright('now running local tests'));
         process.nextTick(cb);
 
       },
 
-      r2g: function (runLocalTests: any, cb: ErrorValueCallback) {
+      r2g: function (runLocalTests: any, cb: EVCb) {
 
         log.info('running r2g tests');
 
