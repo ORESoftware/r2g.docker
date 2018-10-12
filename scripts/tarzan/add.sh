@@ -4,4 +4,4 @@ set -e;
 v=`npm pack`;
 
 tarzan use "oresoftware/tarballs"
-tarzan add "$v" "tgz/oresoftware/docker.r2g.tgz"
+tarzan add "$v" "tgz/oresoftware/r2g.docker.tgz"

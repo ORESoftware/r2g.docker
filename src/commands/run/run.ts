@@ -117,7 +117,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
         log.error(getCleanTrace(err));
       }
       else {
-        log.info('Successfully ran docker.r2g');
+        log.info('Successfully ran r2g.docker');
       }
 
       if (opts.forever) {
@@ -127,7 +127,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
           process.exit(1);
         });
 
-        log.info('docker.r2g run routine is waiting for exit signal from the user. The container id is:', chalk.bold(process.env.r2g_container_id));
+        log.info('r2g.docker run routine is waiting for exit signal from the user. The container id is:', chalk.bold(process.env.r2g_container_id));
         log.info('to inspect the container, use:', chalk.bold(`docker exec -it ${process.env.r2g_container_id} /bin/bash`));
         log.info('to stop/kill the container, use kill, not stop:', chalk.bold(`docker kill ${process.env.r2g_container_id}`));
 

@@ -8,21 +8,24 @@ dkr2g(){
 
  if ! type -f dkr2g &> /dev/null || ! which dkr2g &> /dev/null; then
 
-       echo -e "Installing dkr2g command line package from NPM..." >&2;
+       echo -e "Installing dkr2g/r2g.docker command line package from NPM..." >&2;
 
-       npm i -s -g '@oresoftware/docker.r2g'  || {
-
-          echo -e "Could not install the '@oresoftware/r2g' NPM package globally." >&2;
+       npm i -s -g 'r2g.docker' || {
+          echo -e "Could not install the 'r2g.docker' NPM package globally." >&2;
           echo -e "Check your user permissions to install global NPM packages." >&2;
           return 1;
-
       }
   fi
 
-  command dkr2g $@
+  command dkr2g "$@"
 }
 
 
+r2g_docker(){
+    dkr2g
+}
+
 export -f dkr2g;
+export -f r2g_docker;
 export -f get_latest_dkr2g;
 

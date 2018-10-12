@@ -1,11 +1,10 @@
 {
-  "name": "@oresoftware/docker.r2g",
+  "name": "r2g.docker",
   "version": "0.0.112",
   "description": "Semver-oriented TypeScript library skeleton.",
   "main": "dist/index.js",
   "bin": {
-    "docker_r2g": "assets/cli.sh",
-    "docker.r2g": "assets/cli.sh",
+    "r2g_docker": "assets/cli.sh",
     "dkr2g": "assets/cli.sh"
   },
   "types": "dist/index.d.ts",
@@ -16,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ORESoftware/docker.r2g.git"
+    "url": "git+https://github.com/ORESoftware/r2g.docker.git"
   },
   "keywords": [
     "typescript",
@@ -27,9 +26,9 @@
   "author": "TODO Yo.Mama",
   "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
-    "url": "https://github.com/ORESoftware/docker.r2g/issues"
+    "url": "https://github.com/ORESoftware/r2g.docker/issues"
   },
-  "homepage": "https://github.com/ORESoftware/docker.r2g#readme",
+  "homepage": "https://github.com/ORESoftware/r2g.docker#readme",
   "dependencies": {
     "async": "^2.6.0",
     "chalk": "^2.4.1",

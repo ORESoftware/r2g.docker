@@ -34,12 +34,12 @@ RUN npm set progress=false
 
 ARG CACHEBUST=1
 
-RUN npm install --loglevel=warn -g "@oresoftware/docker.r2g@latest"
-RUN npm install --loglevel=warn -g "@oresoftware/r2g@latest"
+RUN npm install --loglevel=warn -g "r2g.docker@latest"
+RUN npm install --loglevel=warn -g "r2g@latest"
 
 COPY . .
 
 RUN sudo chmod -R 777  /home/node
 
-ENTRYPOINT ["docker.r2g", "run"]
+ENTRYPOINT ["dkr2g", "run"]
 
