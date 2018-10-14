@@ -15,9 +15,13 @@ type Task = (cb: EVCb<any>) => void;
 // queue used to prevent too many dirs searched at once
 const q = async.queue<Task, any>((task, cb) => task(cb), 8);
 
-export const getFSMap = function (opts: any, searchRoot: string, packages: Packages, cb: Function) {
+export interface MapResultType {
+  [key: string]: string
+}
 
-  const map = {} as { [key: string]: string };
+export const getFSMap = (opts: any, searchRoot: string, packages: Packages, cb: EVCb<MapResultType>) => {
+
+  const map: MapResultType = {};
 
   const searchDir = (dir: string, cb: any) => {
 
@@ -39,7 +43,7 @@ export const getFSMap = function (opts: any, searchRoot: string, packages: Packa
 
           const item = path.resolve(dir + '/' + itemv);
 
-          fs.lstat(item, function (err, stats) {
+          fs.lstat(item, (err, stats) => {
 
             if (err) {
               log.warn(err.message);
@@ -141,7 +145,7 @@ export const getFSMap = function (opts: any, searchRoot: string, packages: Packa
 
   };
 
-  searchDir(searchRoot, function (err: any) {
+  searchDir(searchRoot, (err: any) => {
     err && log.error('unexpected error:', err.message || err);
     cb(err, map);
   });

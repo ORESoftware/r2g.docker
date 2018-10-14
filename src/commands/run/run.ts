@@ -11,12 +11,11 @@ import {installDeps} from './install-deps';
 import {renameDeps} from './rename-file-deps';
 import * as util from "util";
 import chalk from "chalk";
-import * as fs from "fs";
 import {EVCb} from "../../index";
 
 ///////////////////////////////////////////////
 
-export const run = function (cwd: string, projectRoot: string, opts: any, argv: Array<string>) {
+export const run = (cwd: string, projectRoot: string, opts: any, argv: Array<string>) => {
 
   let pkgJSON = null, docker2gConf = null, packages = null, fsMap: any = null;
 
@@ -56,48 +55,36 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
   async.autoInject({
 
-      copyProjectsInMap: function (cb: EVCb) {
+      copyProjectsInMap(cb: EVCb<any>) {
         installDeps(fsMap, dependenciesToInstall, opts, cb);
       },
 
-      renamePackagesToAbsolute: function (copyProjectsInMap: any, cb: EVCb) {
+      renamePackagesToAbsolute(copyProjectsInMap: any, cb: EVCb<any>) {
         renameDeps(copyProjectsInMap, pkgJSONPth, cb);
       },
 
-      runNpmInstall: function (renamePackagesToAbsolute: any, cb: EVCb) {
+      runNpmInstall(renamePackagesToAbsolute: any, cb: EVCb<any>) {
 
-        const k = cp.spawn('bash', [] as ReadonlyArray<string>, {
-          cwd: projectRoot
-        });
-
-        const cmd = `sudo npm install --production --loglevel=warn`;
+        const k = cp.spawn('bash');
+        const cmd = `cd ${projectRoot} && rm -rf node_modules && npm install --production --loglevel=warn`;
         log.info('Now running:', chalk.green(cmd));
         k.stdin.end(cmd);
         k.stderr.pipe(process.stderr);
         k.once('exit', cb);
       },
 
-      runLocalTests: function (runNpmInstall: any, cb: EVCb) {
+      runLocalTests(runNpmInstall: any, cb: EVCb<any>) {
 
         log.info(chalk.magentaBright('now running local tests'));
         process.nextTick(cb);
 
       },
 
-      r2g: function (runLocalTests: any, cb: EVCb) {
+      r2g(runLocalTests: any, cb: EVCb<any>) {
 
         log.info('running r2g tests');
-
-        // const k = cp.spawn('bash', argv, {
-        //   cwd: projectRoot
-        // });
-
-        const k = cp.spawn('r2g', ['run'].concat(argv) as ReadonlyArray<string>, {
-          cwd: projectRoot
-        });
-
-        k.stdin.end();
-        // k.stdin.end('r2g run;');
+        const k = cp.spawn('bash');
+        k.stdin.end(`cd ${projectRoot} && r2g run ${argv.join(' ')}`);
         k.stdout.pipe(process.stdout);
         k.stderr.pipe(process.stderr);
         k.once('exit', cb);
@@ -120,25 +107,22 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
         log.info('Successfully ran r2g.docker');
       }
 
-      if (opts.forever) {
-
-        process.once('SIGINT', function () {
-          log.info('SIGINT captured.');
-          process.exit(1);
-        });
-
-        log.info('r2g.docker run routine is waiting for exit signal from the user. The container id is:', chalk.bold(process.env.r2g_container_id));
-        log.info('to inspect the container, use:', chalk.bold(`docker exec -it ${process.env.r2g_container_id} /bin/bash`));
-        log.info('to stop/kill the container, use kill, not stop:', chalk.bold(`docker kill ${process.env.r2g_container_id}`));
-
-        setInterval(() => {
-        }, 150000);
-      }
-      else {
-
+      if (!opts.forever) {
         // ensure exit occurs
-        process.exit(exitCode);
+        return process.exit(exitCode);
       }
+
+      process.once('SIGINT', function () {
+        log.info('SIGINT captured.');
+        process.exit(1);
+      });
+
+      log.info('r2g.docker run routine is waiting for exit signal from the user. The container id is:', chalk.bold(process.env.r2g_container_id));
+      log.info('to inspect the container, use:', chalk.bold(`docker exec -it ${process.env.r2g_container_id} /bin/bash`));
+      log.info('to stop/kill the container, use kill, not stop:', chalk.bold(`docker kill ${process.env.r2g_container_id}`));
+
+      setInterval(() => {
+      }, 150000);
 
     });
 

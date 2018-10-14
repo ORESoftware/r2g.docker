@@ -7,7 +7,7 @@ RUN  curl -sS -o- $ores_bash_utils/master/assets/install-basics.sh | bash
 
 ENV FORCE_COLOR=1
 ENV docker_r2g_in_container=yes
-ENV MY_DOCKER_R2G_SEARCH_ROOT="/home/node"
+ENV MY_R2G_DOCKER_SEARCH_ROOT="/home/node"
 
 RUN sudo echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
@@ -47,8 +47,8 @@ RUN sudo chmod -R 777  /home/node
 ENV PATH="./node_modules/.bin:${PATH}"
 
 RUN npm link -f
-#ENTRYPOINT ["/home/node/app/assets/cli.sh", "run"]
 
+#ENTRYPOINT ["/home/node/app/assets/cli.sh", "run"]
 ENTRYPOINT dkr2g run --allow-unknown $dkr2g_run_args
 
 
