@@ -36,7 +36,7 @@ if [ "$cmd" == "init" ]; then
   fi
 
   if ! type -f r2g; then
-     npm i -g -s '@oresoftware/r2g' || {
+     npm i -g -s 'r2g' || {
        echo "Could not install r2g on your system as a global NPM package.";
        echo "Please check your permissions to install NPM packages globally.";
        exit 1;

@@ -11,9 +11,9 @@ import pt from 'prepend-transform';
 // project
 import log from '../../logger';
 import * as util from "util";
-import {getFSMap} from "./get-fs-map";
+import {getFSMap, MapResultType} from "./get-fs-map";
 import * as assert from "assert";
-import {ErrorValueCallback} from "../../index";
+import {EVCb} from "../../index";
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ export interface Packages {
   [key: string]: boolean | string
 }
 
-export const run = function (cwd: string, projectRoot: string, opts: any, argv: Array<string>) {
+export const run =  (cwd: string, projectRoot: string, opts: any, argv: Array<string>) => {
 
   const userHome = path.resolve(process.env.HOME);
 
@@ -102,12 +102,6 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
   const allDeps = deps.reduce(Object.assign, {});
 
-  deps.forEach(function (d) {
-    Object.keys(d).forEach(function (k) {
-      const v = d[k];
-    });
-  });
-
   Object.keys(packages).forEach(function (k) {
     if (!allDeps[k]) {
       log.warn(chalk.gray('You have the following packages key in your .r2g/config.js file:'), chalk.magentaBright(k));
@@ -115,7 +109,7 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
     }
   });
 
-  let mapObject = function (obj: any, fn: Function, ctx?: object) {
+  let mapObject =  (obj: any, fn: Function, ctx?: object) => {
     return Object.keys(obj).reduce((a: any, b) => {
       return (a[b] = fn.call(ctx || null, b, obj[b])), a;
     }, {});
@@ -125,21 +119,18 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
   async.autoInject({
 
-      getMap (cb: ErrorValueCallback) {
+      getMap (cb: EVCb<MapResultType>) {
         getFSMap(opts, searchRoot, packages, cb);
       },
 
-      checkIfExecFileExists(cb: ErrorValueCallback){
+      checkIfExecFileExists(cb: EVCb<Error>){
 
         const f = path.resolve(projectRoot + '/.r2g/exec.sh');
-
-        fs.stat(f, function(err){
-           cb(null, err);
-        });
+        fs.stat(f, err => cb(null, err));
 
       },
 
-      launchTool (getMap: any, checkIfExecFileExists: any, cb: ErrorValueCallback) {
+      launchTool (getMap: any, checkIfExecFileExists: any, cb: EVCb<any>) {
 
         if(checkIfExecFileExists){
           return process.nextTick(cb, new Error('Looks like the needed ".r2g/exec.sh" file does not exist in your project.'));
@@ -147,16 +138,14 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
 
         const ln = searchRoot.length;
 
-        const mapped = mapObject(getMap, function (k: string, v: any) {
+        const mapped = mapObject(getMap,  (k: string, v: any) => {
           return path.resolve(r2g_shared_dir + String(v).slice(ln));
         });
 
         const map = JSON.stringify(mapped);
-
         log.info('argv for dkr2g exec/run:', argv);
 
-        const k = cp.spawn('./.r2g/exec.sh', argv as ReadonlyArray<string>, {
-          cwd: projectRoot,
+        const k = cp.spawn('bash', [], {
           env: Object.assign({}, process.env, {
             docker_r2g_package_name: pkgName,
             docker_r2g_search_root: searchRoot,
@@ -166,14 +155,10 @@ export const run = function (cwd: string, projectRoot: string, opts: any, argv: 
           })
         });
 
+        k.stdin.end(`cd ${projectRoot} && exec .r2g/exec.sh ${argv.join(' ')}`);
         k.stdout.pipe(pt(chalk.blueBright('[r2g/docker] '))).pipe(process.stdout);
         k.stderr.pipe(pt(chalk.magenta('[r2g/docker] '))).pipe(process.stderr);
-
-        // k.stdin.end(`./.r2g/exec.sh`);
-        k.stdin.end();
-        k.once('exit', function (code) {
-          cb(null, {exitCode: code});
-        });
+        k.once('exit', code =>  cb(null, {exitCode: code}));
 
       }
 

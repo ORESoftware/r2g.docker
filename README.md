@@ -1,20 +1,20 @@
 
 
-# @oresoftware/docker.r2g
+#  r2g.docker  /  @oresoftware/r2g.docker
 
 ### Installation
 
 ```bash
- $ npm i -g '@oresoftware/docker.r2g'
+ $ npm i -g 'r2g.docker'
 ```
 
 or just install:
 
 ```bash
- $ npm i -g '@oresoftware/r2g'
+ $ npm i -g 'r2g'
 ```
 
-and r2g will install docker.r2g for you. Note that `r2g docker` is the same as running `dkr2g exec`.
+and r2g will install r2g.docker for you. Note that `r2g docker` is the same as running `dkr2g exec`.
 
 
 ## Initialize
@@ -61,7 +61,7 @@ their published format.
 ##### To use different node.js / npm versions:
 
 ```bash
-dkr2g exec --node-version="9.5" --npm-version="5.4"
+dkr2g exec --node-version='9.5' --npm-version='5.4'
 ```
 
 If `--node-version` is used, the Docker container will use that Node version. `--nodev` is an alias for --node-version. <br>

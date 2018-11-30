@@ -49,7 +49,7 @@ docker build \
 #    -v "$search_root:$shared:ro"  \
 #    -e docker_r2g_fs_map="$map" \
 #    -e dkr2g_run_args=${run_args} \
-#    -e MY_DOCKER_R2G_SEARCH_ROOT="/dev/null" \
+#    -e MY_R2G_DOCKER_SEARCH_ROOT="/dev/null" \
 #    --name "$container" "$tag"
 
 

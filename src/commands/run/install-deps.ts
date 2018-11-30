@@ -10,7 +10,7 @@ import shortid = require("shortid");
 
 /////////////////////////////////////////////////////////////////
 
-export const installDeps = function (createProjectMap: any, dependenciesToInstall: Array<string>, opts: any, cb: any) {
+export const installDeps = (createProjectMap: any, dependenciesToInstall: Array<string>, opts: any, cb: any) => {
 
   const finalMap = {} as any;
 
@@ -18,7 +18,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
     return process.nextTick(cb, null, finalMap);
   }
 
-  async.eachLimit(dependenciesToInstall, 3, function (dep, cb) {
+  async.eachLimit(dependenciesToInstall, 3,  (dep, cb) => {
 
       if (!createProjectMap[dep]) {
         log.info('dependency is not in the local map:', dep);
@@ -34,37 +34,34 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       const basename = path.basename(c);
       const depRoot = path.resolve(dest + '/' + basename);
 
+      const pack =  (depRoot: string, cb: any) => {
 
-      const pack = function(depRoot: string, cb: any){
-
-        if(!opts.pack){
+        if (!opts.pack) {
           // the map just points to the root of the project
           finalMap[dep] = depRoot;
           return process.nextTick(cb);
         }
 
-        const k = cp.spawn('bash', [], {
-          cwd: depRoot
-        });
+        const k = cp.spawn('bash');
 
         const cmd = [
+          `cd ${depRoot}`,
           `npm pack --loglevel=warn`,
         ]
-        .join('; ');
-
+          .join('; ');
 
         log.info(`Now running: '${chalk.cyan.bold(cmd)}', in this directory: "${depRoot}".`);
 
         let stdout = '';
 
         k.stdout.on('data', function (d) {
-          stdout+= String(d).trim();
+          stdout += String(d).trim();
         });
         k.stdin.end(cmd + '\n');
         k.stderr.pipe(process.stderr);
         k.once('exit', function (code) {
 
-          if(code > 0){
+          if (code > 0) {
             return cb(new Error('"npm pack" command exited with code greater than 0.'));
           }
 
@@ -78,14 +75,14 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
       const cmd = [
         `set -e`,
         `mkdir -p "${dest}"`,
-        `rsync -r --exclude="node_modules" "${c}" "${dest}"`,
+        `rsync -r --exclude=".git" --exclude="node_modules" "${c}" "${dest}"`,
         // `npm install --loglevel=warn "${dest}/${basename}";`
       ]
-      .join('; ');
+        .join('; ');
 
       log.info(`Now running: '${chalk.cyan.bold(cmd)}'`);
 
-      k.stdin.end(cmd + '\n');
+      k.stdin.end(cmd);
       k.stderr.pipe(process.stderr);
 
       k.once('exit', function (code) {
@@ -103,40 +100,7 @@ export const installDeps = function (createProjectMap: any, dependenciesToInstal
     },
 
     function (err) {
-
       process.nextTick(cb, err, finalMap);
-
-      /*     if (err) {
-             return cb(err);
-           }
-
-           const k = cp.spawn('bash');
-
-           const getMap = function () {
-             return results.filter(Boolean).map(function (v) {
-               return `"${v.dest}/${v.basename}"`
-             })
-             .join(' ');
-           };
-
-           const cmd = `npm install --loglevel=warn ${getMap()} `;
-           log.info('now running the following command:', chalk.green.bold(cmd));
-           k.stdin.end(cmd);
-
-           k.stderr.pipe(process.stderr);
-
-           k.once('exit', function (code) {
-
-             if (code < 1) {
-               cb(null, finalMap);
-             }
-             else {
-               cb(new Error('npm install process exitted with code greater than 0.'));
-             }
-
-           });
-
-         });*/
     });
 
 };
